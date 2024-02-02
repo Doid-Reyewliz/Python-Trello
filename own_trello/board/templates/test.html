@@ -1,0 +1,142 @@
+<head>
+    <title>Jira Tasks</title>
+    <meta http-equiv="refresh" content="300">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css\jira.css' %}">
+    <link rel="shortcur icon" href="{% static 'images\prime_source.png' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="welcome">
+            <img src="{{ avatar }}">
+            <!-- <img src="{% static 'images\prime_source.png' %}" alt=""> -->
+            <h3>{{ fullname }}</h3>
+        </div>
+
+        <div class="filter">
+            <label>Фильровать по:</label>
+            <select id="clients">
+                <option value="0">Все</option>
+                {% for values in list_of_clients %}
+                    {% ifchanged %}
+                        <option value="{{ values }}"> 
+                            {{ values }}
+                        </option>
+                    {% endifchanged %}  
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="order">
+            <label>Сортировать по:</label>
+            <select id="prior">
+                <option value="0">Все</option>
+                {% for values in list_of_priority %}
+                    {% ifchanged %}
+                        <option value="{{ values }}"> 
+                            {{ values }}
+                        </option>
+                    {% endifchanged %}  
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="buttons">
+            <button><a href="\login\">Выйти</a></button>
+        </div>
+    </nav>
+
+    <div class="content">
+        {% for key, values in tasks.items %}
+            {% if values.1 > 0 %}
+                <div class="task">
+                    <div class="name">
+                        <p>{{ key }} <span>{{ values.1 }}</span></p>
+                    </div>
+                    
+                    <div class="tickets">
+                        {% for task_key, task_val in values.0.items %}
+                            <div class="ticket">
+                                <div class="labels">
+                                    <div class="priority">
+                                        {% if task_val.1 == 'Низкий' %}
+                                            <p id="low">{{ task_val.1 }}</p> 
+                                        {% elif task_val.1 == 'Средний' %}
+                                            <p id="mid">{{ task_val.1 }}</p> 
+                                        {% elif task_val.1 == 'Высокий' %}
+                                            <p id="high">{{ task_val.1 }}</p>
+                                        {% elif task_val.1 == 'Критический' %}
+                                            <p id="high">{{ task_val.1 }}</p> 
+                                        {% endif %}
+                                    </div>
+        
+                                    <div class="client">
+                                        <p style="background-color: {{ task_val.2.1 }}; color: {{ task_val.2.2 }};">{{ task_val.2.0 }}</p>
+                                    </div>
+
+                                    <div class="type">
+                                        <i>  </i>
+                                    </div>
+                                </div>
+
+                                <div class="link">
+                                    <a href="https://support.p-s.kz/browse/{{ task_key }}" target="_blank">{{ task_key }}</a>
+                                </div>
+
+                                <div class="info">
+                                    <p>{{ task_val.0 }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</body>
+
+<script>
+    $(document).ready(function() {
+        $('#clients').change(function() {
+            var selectedValue = $(this).val();
+
+            $.ajax({
+                url: '/board/',
+                data: { 
+                    'client': selectedValue 
+                },
+                dataType: 'html',
+                success: function(data) {
+                    $('body').html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('HTTP status code:', jqXHR.status);
+                    console.log('HTTP status text:', jqXHR.statusText);
+                    console.log('errorThrown', errorThrown);
+                }
+            });
+        });
+
+        $('#prior').change(function() {
+            var selectedValue = $(this).val();
+    
+            $.ajax({
+                url: '/board/',
+                data: { 
+                    'prior': selectedValue 
+                },
+                dataType: 'html',
+                success: function(data) {
+                    $('body').html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('HTTP status code:', jqXHR.status);
+                    console.log('HTTP status text:', jqXHR.statusText);
+                    console.log('errorThrown', errorThrown);
+                }
+            });
+        });
+    });
+</script>
