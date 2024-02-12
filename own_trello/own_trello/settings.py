@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-*+*wk-_p5-sa!loq&c6(7x&^3w076&co!ak96$peuv9ek_$zpu
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["https://e175-5-188-153-101.ngrok-free.app", "https://www.e175-5-188-153-101.ngrok-free.app"]
+CSRF_TRUSTED_ORIGINS = ["https://8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev", "https://www.8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev"]
 
 # Application definition
 
