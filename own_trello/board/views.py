@@ -84,7 +84,7 @@ def jira_view(request):
         "Сбербанк":                                 ["Sber bank", "#1f845a", "#fff", "SETTINGS-95"],
         "Банк ЦентрКредит":                         ["BCC", "#f5cd47", "#533f04", "SETTINGS-91"],
         "Народный Банк":                            ["Halyk Bank", "#1f845a", "#fff", "SETTINGS-100"],
-        "RBK":                                      ["RBK", "#6cc3e0", "#164555", "SETTINGS-89"],
+        "RBK":                                      ["RBK", "#53dbdc", "#164555", "SETTINGS-89"],
         "Банк Хоум Кредит" :                        ["Home Credit Bank", "#c9372c", "#fff", "SETTINGS-93"],
         "Халык Банк Кыргызстан":                    ["HBK", "#1f845a", "#fff", "SETTINGS-198"],
         "ВТБ":                                      ["VTB", "#0c66e4", "#fff", "SETTINGS-94"],
