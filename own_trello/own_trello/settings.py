@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-*+*wk-_p5-sa!loq&c6(7x&^3w076&co!ak96$peuv9ek_$zpu
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["https://8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev", "https://www.8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://https://own-trello.uc.r.appspot.com", "https://www.https://own-trello.uc.r.appspot.com", "https://83ce-35-221-168-32.ngrok-free.app", "https://www.83ce-35-221-168-32.ngrok-free.app"]
 
 # Application definition
 
