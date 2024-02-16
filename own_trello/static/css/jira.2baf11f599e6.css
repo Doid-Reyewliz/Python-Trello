@@ -1,0 +1,237 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+:root {
+  --header-height: 3rem;
+  --nav-width: 68px;
+  --first-color: #fff;
+  --first-color-light: #A1C1FE;
+  --color-60: #f5fbf6;
+  --color-30: #f0f4f9;
+  --color-10: #cee9db;
+  --color-support: #4d6359;
+  --color-support2: #c1e8fd;
+  --color-font: #a6a0df;
+  --color-nav: #6180e5;
+  --color-icon: #7a8bdc;
+  --color-h: #5a6cc0;
+  --white-color: #fff;
+  --dark-ticket: #333739;
+  --dark-color: #181a1b;
+  --dark-body: #1c1e1f;
+  --body-font: "Open Sans", sans-serif;
+  --normal-font-size: 1rem;
+  --z-fixed: 100;
+  --thumb-color:#FFCC33;
+  --toggle-h:20rem;
+  --toggle-w:50rem;
+  --thumb-size:22rem;
+  --color-low: #baf3db;
+  --font-low: #216e4e;
+  --color-medium: #f8e6a0;
+  --font-medium: #675317;
+  --color-high: #ffd5d2;
+  --font-high: #a22a1f;
+  --color-crit: #c9372c;
+  --font-crit: #fff;
+}
+
+*, ::before, ::after {
+  box-sizing: border-box;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+body {
+  position: relative;
+  margin: var(--header-height) 0 0 0;
+  padding: 20px;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  transition: 0.5s;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background-color: var(--first-color) !important;
+}
+body nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  left: 1%;
+  width: 98%;
+  border-radius: 20px;
+  background-color: var(--first-color) !important;
+  z-index: var(--z-fixed);
+  padding: 15px 15px;
+  border: 2px solid #dfe1e6;
+  box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.2);
+}
+body nav div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+body nav div img {
+  border-radius: 100%;
+  margin-right: 20px;
+  width: 48px;
+  height: 48px;
+}
+body nav div button {
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+  padding: 10px 15px 10px 15px;
+  margin-right: 20px;
+  font-size: 20px;
+  transition: 0.5;
+}
+body nav div button:hover {
+  cursor: pointer;
+  transition: 0.5;
+  filter: brightness(0.9);
+}
+body nav div button:nth-of-type(1) {
+  background-color: var(--color-high);
+}
+body nav div button:nth-of-type(1) a {
+  color: var(--font-high);
+}
+body nav div button a {
+  text-decoration: none;
+}
+body nav div select {
+  border-radius: 10px;
+  background-color: var(--color-30) !important;
+  border: 2px solid #dfe1e6;
+  padding: 5px 5px;
+  margin-left: 10px;
+}
+body nav div select:focus {
+  border: 2px solid #dfe1e6;
+  outline: none;
+}
+body nav p {
+  margin: 0 20px 0 0;
+  font-size: 20px;
+}
+body nav p:hover {
+  cursor: pointer;
+  color: var(--color-high);
+}
+body .content {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  position: fixed;
+  margin-top: 50px;
+  left: 1%;
+  width: 98%;
+}
+body .content .task {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background-color: var(--color-30) !important;
+  border: 2px solid #dfe1e6;
+  padding: 15px 12px 15px 12px;
+  width: 37vh;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: 10vh;
+  max-height: 83vh;
+  border-radius: 15px;
+  margin: 10px 7px 0 7px;
+  box-shadow: 4px 5px 3px -3px rgba(34, 60, 80, 0.12);
+}
+body .content .task .name p {
+  height: 40px;
+  font-size: 85%;
+  font-weight: 700;
+  margin: 0;
+  padding-left: 5px;
+}
+body .content .task .name p span {
+  font-weight: 600;
+  color: #fff;
+  background-color: #00a6ed;
+  padding: 0 8px 0 8px;
+  margin-left: 6px;
+  width: 50px;
+  height: 30px;
+  border-radius: 5px;
+}
+body .content .task .tickets {
+  width: 100%;
+  padding-right: 10px;
+  overflow-y: auto;
+}
+body .content .task .tickets .ticket {
+  background-color: var(--first-color) !important;
+  padding: 10px 10px 5px 10px;
+  color: var(--dark-ticket);
+  border-radius: 15px;
+  margin-bottom: 10px;
+  height: -moz-fit-content;
+  height: fit-content;
+  box-shadow: 4px 4px 2px 0px rgba(34, 60, 80, 0.2);
+}
+body .content .task .tickets .ticket .labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin-bottom: 10px;
+}
+body .content .task .tickets .ticket .labels .priority, body .content .task .tickets .ticket .labels .client {
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+  display: block;
+  margin-right: 5px;
+}
+body .content .task .tickets .ticket .labels .priority p, body .content .task .tickets .ticket .labels .client p {
+  border-radius: 5px;
+  font-size: 80%;
+  margin: 0;
+  padding: 3px 0.5rem 3px 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+body .content .task .tickets .ticket .labels .priority > #low, body .content .task .tickets .ticket .labels .client > #low {
+  color: var(--font-low);
+  background-color: var(--color-low);
+}
+body .content .task .tickets .ticket .labels .priority > #mid, body .content .task .tickets .ticket .labels .client > #mid {
+  color: var(--font-medium);
+  background-color: var(--color-medium);
+}
+body .content .task .tickets .ticket .labels .priority > #high, body .content .task .tickets .ticket .labels .client > #high {
+  color: var(--font-high);
+  background-color: var(--color-high);
+}
+body .content .task .tickets .ticket .labels .priority > #crit, body .content .task .tickets .ticket .labels .client > #crit {
+  color: var(--font-crit);
+  background-color: var(--color-crit);
+}
+body .content .task .tickets .ticket .link {
+  margin-bottom: 5px;
+}
+body .content .task .tickets .ticket .link a {
+  text-decoration: none;
+  color: #0052cc;
+}
+body .content .task .tickets .ticket .link a:hover {
+  color: #0065ff;
+}
+body .content .task .tickets .ticket .info {
+  font-size: small;
+  margin-top: -5px;
+  overflow-wrap: break-word;
+}/*# sourceMappingURL=jira.css.map */
