@@ -7,7 +7,7 @@ from pymongo import MongoClient
 
 class Database:
     def __init__(self, db_user, db_pass):
-        connection_string = f"mongodb+srv://{db_user}:{db_pass}@cluster0.d9ddyxv.mongodb.net/Makpal?retryWrites=true&w=majority"
+        connection_string = f"mongodb+srv://{db_user}:{db_pass}@cluster0.d9ddyxv.mongodb.net/Makpal"
 
         self.client = MongoClient(connection_string)
         self.db = self.client['Makpal']
@@ -18,8 +18,8 @@ class Database:
 
 def login_view(request):
     if request.method == 'POST':
-        db_user = "alfanauashev"
-        db_pass = '50SBW50gejk8Wn7F'
+        db_user = "django"
+        db_pass = 'Iv957TtQL5GWWuTL'
         
         usrn = request.POST.get('InputEmail')
         pswd = request.POST.get('InputPassword')
