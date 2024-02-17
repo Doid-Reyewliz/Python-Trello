@@ -7,11 +7,11 @@ from pymongo import MongoClient
 
 class Database:
     def __init__(self, db_user, db_pass):
-        connection_string = f"mongodb+srv://{db_user}:{db_pass}@cluster0.d9ddyxv.mongodb.net/Makpal?retryWrites=true&w=majority"
+        connection_string = f"mongodb+srv://{db_user}:{db_pass}@primecluster.6buri4v.mongodb.net/?retryWrites=true&w=majority"
 
         self.client = MongoClient(connection_string)
-        self.db = self.client['Makpal']
-        self.users_collection = self.db["User"]
+        self.db = self.client['Users']
+        self.users_collection = self.db["Prime"]
 
     def get_user(self, mail):
         return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
