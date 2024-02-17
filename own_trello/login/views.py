@@ -18,8 +18,11 @@ class Database:
 
 def login_view(request):
     if request.method == 'POST':
-        db_user = "own-trello"
-        db_pass = 'LqxoXxDxHBPVUNEx'
+        # db_user = "own-trello"
+        # db_pass = 'LqxoXxDxHBPVUNEx'
+        
+        db_user = "alfanauashev"
+        db_pass = '50SBW50gejk8Wn7F'
         
         usrn = request.POST.get('InputEmail')
         pswd = request.POST.get('InputPassword')
