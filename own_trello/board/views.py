@@ -9,6 +9,7 @@ import requests
 from PIL import Image
 import io
 
+from django.views.decorators.cache import cache_page
 
 class Database:
     def __init__(self, db_user, db_pass):
@@ -28,6 +29,7 @@ def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"
     
     return filename
 
+@cache_page(60 * 15)
 def jira_view(request):
     db_user = "alfanauashev"
     db_pass = '50SBW50gejk8Wn7F'
