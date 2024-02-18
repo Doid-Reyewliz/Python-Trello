@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*+*wk-_p5-sa!loq&c6(7x&^3w076&co!ak96$peuv9ek_$zpu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ["https://own-trello.uc.r.appspot.com", "https://www.own-trello.uc.r.appspot.com"]
