@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
 
 from atlassian import Jira
 from pymongo import MongoClient
@@ -20,6 +21,8 @@ class Database:
 
     def get_user(self, mail):
         return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
+
+@cache_page(60 * 15)
 
 def jira_view(request):
     db_user = "alfanauashev"
