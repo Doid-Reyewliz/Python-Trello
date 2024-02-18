@@ -22,9 +22,8 @@ class Database:
         return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
 
 
-def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
+def save_avatar(binary_data, filename=r"Python-Trello\own_trello\board\static\images\profile_picture.png"):
     image = Image.open(io.BytesIO(binary_data))
-    # image.show()
     image.save(filename)
     
     return filename
@@ -119,60 +118,7 @@ def jira_view(request):
         "Низкий": "Low"
     }
     
-    if (request.method == 'POST' or request.method == 'GET'):
-        client = request.GET.get('client', None)
-        prior = request.GET.get('prior', None)
-
-        if (client is not None and client != 0) and (prior is not None and prior != 0):
-            is_associated = False
-            
-            for key, item in dict_clients.items():
-                if client == item[0]:
-                    client = item[3]
-                    is_associated = True
-                    break
-            
-            for key, value in dict_prior.items():
-                if prior == key:
-                    prior = value
-                    is_associated = True
-                    break
-            
-
-            if is_associated:
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {client} AND priority = {prior} ORDER BY created DESC"
-            else:
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
-
-        elif client is not None and client != 0:
-            is_associated = False
-            for key, item in dict_clients.items():
-                if client == item[0]:
-                    client = item[3]
-                    is_associated = True
-                    break
-
-            if is_associated:
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {client} ORDER BY created DESC"
-            else:
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
-
-        elif prior is not None and prior != 0:
-            is_associated = False
-
-            for key, value in dict_prior.items():
-                if prior == key:
-                    prior = value
-                    is_associated = True
-                    break
-                
-            if is_associated:  
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND priority = {prior} ORDER BY created DESC"
-            else:
-                jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
-
-        else:
-            jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
+    jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
 
     closed = jira.jql(jql_str)
     
@@ -235,9 +181,4 @@ def jira_view(request):
                             if dict_clients[client][0] not in list_of_clients:
                                 list_of_clients.append(dict_clients[client][0])
     
-    if client is not None and prior is not None:
-        html = render_to_string('test.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'})
-        
-        return JsonResponse({'html': html})
-    else:
-        return render(request, 'jira.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'}) 
+    return render(request, 'jira.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'}) 

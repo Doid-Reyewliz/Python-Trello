@@ -15,38 +15,8 @@
         <nav>
             <div class="welcome">
                 <img src="{{ avatar }}">
-                <!-- <img src="{% static 'images\prime_source.png' %}" alt=""> -->
                 <h3>{{ fullname }}</h3>
-            </div>
-
-            <!-- <div class="filter">
-                <label>Фильровать по:</label>
-                <select id="clients">
-                    <option value="0">Все</option>
-                    {% for values in list_of_clients %}
-                        {% ifchanged %}
-                            <option value="{{ values }}"> 
-                                {{ values }}
-                            </option>
-                        {% endifchanged %}  
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="order">
-                <label>Сортировать по:</label>
-                <select id="prior">
-                    <option value="0">Все</option>
-                    {% for values in list_of_priority %}
-                        {% ifchanged %}
-                            <option value="{{ values }}"> 
-                                {{ values }}
-                            </option>
-                        {% endifchanged %}  
-                    {% endfor %}
-                </select>
-            </div> -->
-            
+            </div>            
             <div class="buttons">
                 <button><a href="\login\">Выйти</a></button>
             </div>
@@ -100,48 +70,4 @@
             {% endfor %}
         </div>
     </body>
-    
-    <!-- <script>
-        $(document).ready(function() {
-            $('#clients').change(function() {
-                var selectedValue = $(this).val();
-
-                $.ajax({
-                    url: '/board/',
-                    data: { 
-                        'client': selectedValue 
-                    },
-                    dataType: 'html',
-                    success: function(data) {
-                        $('html').html(data);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('HTTP status code:', jqXHR.status);
-                        console.log('HTTP status text:', jqXHR.statusText);
-                        console.log('errorThrown', errorThrown);
-                    }
-                });
-            });
-
-            $('#prior').change(function() {
-                var selectedValue = $(this).val();
-        
-                $.ajax({
-                    url: '/board/',
-                    data: { 
-                        'prior': selectedValue 
-                    },
-                    dataType: 'html',
-                    success: function(data) {
-                        $('html').html(data);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('HTTP status code:', jqXHR.status);
-                        console.log('HTTP status text:', jqXHR.statusText);
-                        console.log('errorThrown', errorThrown);
-                    }
-                });
-            });
-        });
-    </script> -->
 </html>
