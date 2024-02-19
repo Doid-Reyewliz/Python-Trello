@@ -22,7 +22,7 @@ class Database:
     def get_user(self, mail):
         return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
 def jira_view(request):
     db_user = "alfanauashev"
     db_pass = '50SBW50gejk8Wn7F'
