@@ -6,10 +6,6 @@ from django.views.decorators.cache import cache_page
 from atlassian import Jira
 from pymongo import MongoClient
 
-import requests
-from PIL import Image
-import io
-
 
 class Database:
     def __init__(self, db_user, db_pass):
