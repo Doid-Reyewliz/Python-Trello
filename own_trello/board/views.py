@@ -132,22 +132,24 @@ def jira_view(request):
                     fullname = str(ii['fields']['assignee']['displayName'])
                 
                 if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
-                    url = str(ii['fields']['assignee']['self'])
-                    
-                    headers = {"Authorization": f"Bearer {user_data['token']}"}
-                    
-                    response = requests.get(url, headers=headers)
-                    response.raise_for_status()
-                    
-                    data = response.json()
-                    
-                    avatar_url = data['avatarUrls']['48x48']
-                    
-                    response = requests.get(avatar_url, stream=True, headers=headers)
-                    response.raise_for_status()
-                    
-                    avatar = save_avatar(response.content).replace('board\\', '\\')
-                    # avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                    try:
+                        url = str(ii['fields']['assignee']['self'])
+                        
+                        headers = {"Authorization": f"Bearer {user_data['token']}"}
+                        
+                        response = requests.get(url, headers=headers)
+                        response.raise_for_status()
+                        
+                        data = response.json()
+                        
+                        avatar_url = data['avatarUrls']['48x48']
+                        
+                        response = requests.get(avatar_url, stream=True, headers=headers)
+                        response.raise_for_status()
+                        
+                        avatar = save_avatar(response.content).replace('board\\', '\\')
+                    except:
+                        avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
 
                 
                 if str(ii['fields']['status']['name']).upper() in tasks:
