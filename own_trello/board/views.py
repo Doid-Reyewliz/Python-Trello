@@ -6,6 +6,9 @@ from django.views.decorators.cache import cache_page
 from atlassian import Jira
 from pymongo import MongoClient
 
+import requests
+from PIL import Image
+import io
 
 class Database:
     def __init__(self, db_user, db_pass):
@@ -17,6 +20,12 @@ class Database:
 
     def get_user(self, mail):
         return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
+
+def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
+    image = Image.open(io.BytesIO(binary_data))
+    image.save(filename)
+    
+    return filename
 
 # @cache_page(60 * 15)
 def jira_view(request):
@@ -123,7 +132,22 @@ def jira_view(request):
                     fullname = str(ii['fields']['assignee']['displayName'])
                 
                 if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
-                    avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                    url = str(ii['fields']['assignee']['self'])
+                    
+                    headers = {"Authorization": f"Bearer {user_data['token']}"}
+                    
+                    response = requests.get(url, headers=headers)
+                    response.raise_for_status()
+                    
+                    data = response.json()
+                    
+                    avatar_url = data['avatarUrls']['48x48']
+                    
+                    response = requests.get(avatar_url, stream=True, headers=headers)
+                    response.raise_for_status()
+                    
+                    avatar = save_avatar(response.content).replace('board\\', '\\')
+                    # avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
 
                 
                 if str(ii['fields']['status']['name']).upper() in tasks:
