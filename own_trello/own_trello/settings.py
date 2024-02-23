@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-*+*wk-_p5-sa!loq&c6(7x&^3w076&co!ak96$peuv9ek_$zpu
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["https://8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev", "https://www.8000-cs-cccea16d-d8a8-47a3-8f2d-38a8836747ab.cs-asia-east1-jnrc.cloudshell.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://own-trello.uc.r.appspot.com", "https://www.own-trello.uc.r.appspot.com"]
 
 # Application definition
 
@@ -137,6 +137,10 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'cache',
+    }
+}

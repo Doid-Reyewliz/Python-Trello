@@ -81,7 +81,7 @@ body .content form .input #togglePass {
   margin-left: -30px;
   margin-bottom: 5px;
   cursor: pointer;
-  color: #0052cc;
+  color: #0065ff;
 }
 html .content form .input #password,
 body .content form .input #password {
@@ -110,7 +110,6 @@ body .content form .input input[type=password]::placeholder {
 }
 html .content form input[type=submit],
 body .content form input[type=submit] {
-  background: #0052cc;
   color: #F6F7F9;
   height: 50px;
   line-height: 40px;
@@ -118,15 +117,17 @@ body .content form input[type=submit] {
   border: none;
   border-radius: 30px;
   font-weight: 600;
-  transition: 0.3s;
+  transition: 0.5s;
   cursor: pointer;
   font-size: 20px;
+  background-color: #0065ff;
+  text-align: center;
 }
 html .content form input[type=submit]:hover,
 body .content form input[type=submit]:hover {
-  background-color: #0065ff;
-  width: 170px;
-  transition: 0.3s;
+  width: 160px;
+  border-radius: 10px;
+  transition: 0.4s;
 }
 html .content *,
 body .content * {

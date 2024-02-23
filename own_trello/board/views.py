@@ -24,12 +24,10 @@ class Database:
 
 def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
     image = Image.open(io.BytesIO(binary_data))
-    # image.show()
     image.save(filename)
     
     return filename
 
-@cache_page(60 * 15)
 def jira_view(request):
     db_user = "alfanauashev"
     db_pass = '50SBW50gejk8Wn7F'
@@ -39,6 +37,14 @@ def jira_view(request):
     
     db = Database(db_user, db_pass)
     user_data = db.get_user(usrn)
+    
+    fullname = None
+    avatar = None
+    list_of_clients = []
+    
+    dict_issue = {
+        'Ошибка': ['https://support.p-s.kz/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype', '#ff5630', '#fff']
+    }
     
     if user_data['token'] is None:
         return render(request, 'jira.html', {'data': 'error'})
@@ -57,11 +63,6 @@ def jira_view(request):
         "КЛИЕНТ - ТЕСТИРОВАНИЕ": [{}, 0],
         "ЗАКРЫТЫЕ": [{}, 0]
     }
-    
-    fullname = None
-    avatar = None
-    list_of_clients = []
-    list_of_priority = []
     
     clients = [  
         "Евразийский Банк",
@@ -113,66 +114,20 @@ def jira_view(request):
         "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"]
     }
     
-    dict_prior = {
-        "Критический": "Critical",
-        "Высокий": "High",
-        "Средний": "Medium",
-        "Низкий": "Low"
-    }
-    
     if (request.method == 'POST' or request.method == 'GET'):
-        client = request.GET.get('client', None)
-        prior = request.GET.get('prior', None)
+        get_client = request.GET.get('client', None)
                 
-        if (client is not None and client != 0) and (prior is not None and prior != '0'):
-            is_associated = [False, False]
-            
-            for key, item in dict_clients.items():
-                if client == item[0]:
-                    client = item[3]
-                    is_associated[0] = True
-                    break
-            
-            for key, value in dict_prior.items():
-                if prior == key:
-                    prior = value
-                    is_associated[1] = True
-                    break
-            
-            if any(is_associated):
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {client} AND priority = {prior} ORDER BY created DESC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {client} AND priority = {prior} ORDER BY created DESC"
-            else:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created DESC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
-
-        elif client is not None and client != '0':
+        if get_client is not None and get_client != '0':
             is_associated = False
             for key, item in dict_clients.items():
-                if client == item[0]:
-                    client = item[3]
+                if get_client == item[0]:
+                    get_client = item[3]
                     is_associated = True
                     break
                 
             if is_associated:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {client} ORDER BY created DESC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {client} ORDER BY created DESC"
-            else:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created DESC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
-
-        elif prior is not None and prior != '0':
-            is_associated = False
-
-            for key, value in dict_prior.items():
-                if prior == key:
-                    prior = value
-                    is_associated = True
-                    break
-                
-            if is_associated:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND priority = {prior} ORDER BY created DESC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND priority = {prior} ORDER BY created DESC"
+                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created DESC"
+                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created DESC"
             else:
                 opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created DESC"
                 closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
@@ -183,9 +138,6 @@ def jira_view(request):
 
     board_info = jira.jql(opened_str)
     closed = jira.jql(closed_str)
-    
-    # board_id = 28
-    # board_info = jira.get_issues_for_board(board_id, jql=None, fields=None, start=0, limit=None, expand=None)
     
     for i in board_info:
         if i == 'issues':
@@ -214,10 +166,7 @@ def jira_view(request):
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(f"{ii['fields']['summary']}")
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(ii['fields']['priority']['name'])
-                    
-                    if ii['fields']['priority']['name'] not in list_of_priority:
-                        list_of_priority.append(ii['fields']['priority']['name'])
-                    
+                                          
                     tasks[str(ii['fields']['status']['name']).upper()][1] += 1
                     
                     for client in clients:
@@ -226,6 +175,11 @@ def jira_view(request):
                             
                             if dict_clients[client][0] not in list_of_clients:
                                 list_of_clients.append(dict_clients[client][0])
+                    
+                    for issue in dict_issue:
+                        if issue == ii['fields']['issuetype']['name']:
+                            tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_issue[issue])
+
                             
     for i in closed:
         if i == 'issues':
@@ -243,9 +197,13 @@ def jira_view(request):
                             if dict_clients[client][0] not in list_of_clients:
                                 list_of_clients.append(dict_clients[client][0])
         
-    if client is not None and prior is not None:
-        html = render_to_string('tasks_content.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'})
-        
+    data = {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'data': 'success'}
+
+    if get_client is not None:
+        html = render_to_string('tasks_content.html', data)
+        print('[2]', get_client, type(get_client))        
         return JsonResponse({'html': html})
-    else:
-        return render(request, 'jira.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'}) 
+        
+    print('[1]', get_client, type(get_client))
+    print(tasks)
+    return render(request, 'jira.html', data) 

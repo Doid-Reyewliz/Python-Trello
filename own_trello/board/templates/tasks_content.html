@@ -9,24 +9,12 @@
                 {% for task_key, task_val in values.0.items %}
                     <div class="ticket">
                         <div class="labels">
-                            <div class="priority">
-                                {% if task_val.1 == 'Низкий' %}
-                                    <p id="low">{{ task_val.1 }}</p> 
-                                {% elif task_val.1 == 'Средний' %}
-                                    <p id="mid">{{ task_val.1 }}</p> 
-                                {% elif task_val.1 == 'Высокий' %}
-                                    <p id="high">{{ task_val.1 }}</p>
-                                {% elif task_val.1 == 'Критический' %}
-                                    <p id="high">{{ task_val.1 }}</p> 
-                                {% endif %}
+                            <div class="issue">
+                                <p style="background-color: {{ task_val.3.1 }}; color: {{ task_val.3.2 }};"> <img src="{{ task_val.3.0 }}"> </p>
                             </div>
 
                             <div class="client">
                                 <p style="background-color: {{ task_val.2.1 }}; color: {{ task_val.2.2 }};">{{ task_val.2.0 }}</p>
-                            </div>
-
-                            <div class="type">
-                                <i>  </i>
                             </div>
                         </div>
 
