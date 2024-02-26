@@ -41,6 +41,7 @@ def jira_view(request):
     fullname = None
     avatar = None
     list_of_clients = []
+    get_client = '0'
     
     dict_issue = {
         'Ошибка': ['https://support.p-s.kz/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype', '#ff5630', '#fff']
@@ -199,11 +200,13 @@ def jira_view(request):
         
     data = {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'data': 'success'}
 
-    if get_client is not None:
-        html = render_to_string('tasks_content.html', data)
-        print('[2]', get_client, type(get_client))        
-        return JsonResponse({'html': html})
+    # if get_client is not None:
+    # html = render_to_string('tasks_content.html', data)
+    # print('[2]', get_client, type(get_client))
+    # return JsonResponse({'html': html})
+
+    return render(request, 'jira.html', data)
         
-    print('[1]', get_client, type(get_client))
-    print(tasks)
-    return render(request, 'jira.html', data) 
+    # print('[1]', get_client, type(get_client))
+    # print(tasks)
+    # return render(request, 'jira.html', data) 
