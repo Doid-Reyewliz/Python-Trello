@@ -1,17 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-<<<<<<< HEAD
 from django.core.cache import cache
 
-=======
-from django.views.decorators.cache import cache_page
->>>>>>> google
 
 from atlassian import Jira
 from pymongo import MongoClient
 
-<<<<<<< HEAD
 import asyncio
 import aiohttp
 from asgiref.sync import sync_to_async, async_to_sync
@@ -19,19 +14,6 @@ from asgiref.sync import sync_to_async, async_to_sync
 import requests
 from PIL import Image
 import io
-=======
-import requests
-from PIL import Image
-import io
-
-class Database:
-    def __init__(self, db_user, db_pass):
-        connection_string = f"mongodb+srv://{db_user}:{db_pass}@primecluster.6buri4v.mongodb.net/?retryWrites=true&w=majority"
-
-        self.client = MongoClient(connection_string)
-        self.db = self.client['Users']
-        self.users_collection = self.db["Prime"]
->>>>>>> google
 
 from django.views.decorators.cache import cache_page
 
@@ -41,16 +23,9 @@ def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"
     
     return filename
 
-<<<<<<< HEAD
 def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
     image = Image.open(io.BytesIO(binary_data))
     image.save(filename)
-=======
-# @cache_page(60 * 15)
-def jira_view(request):
-    db_user = "alfanauashev"
-    db_pass = '50SBW50gejk8Wn7F'
->>>>>>> google
     
     return filename
 
@@ -142,7 +117,6 @@ async def jira_view(request):
     get_client = request.GET.get('client', None)
     
     
-<<<<<<< HEAD
     print('[0]', get_client, type(get_client))
             
     if get_client is not None and get_client != '-1':
@@ -166,9 +140,6 @@ async def jira_view(request):
         else:
             opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
             closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created ASC"
-=======
-    jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
->>>>>>> google
 
     else:
         opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
@@ -187,22 +158,15 @@ async def jira_view(request):
                     try:
                         url = str(ii['fields']['assignee']['self'])
                         
-<<<<<<< HEAD
                         headers = {"Authorization": f"Bearer {token}"}
                         
                         response = await sync_to_async(requests.get)(url, headers=headers)
-=======
-                        headers = {"Authorization": f"Bearer {user_data['token']}"}
-                        
-                        response = requests.get(url, headers=headers)
->>>>>>> google
                         response.raise_for_status()
                         
                         data = response.json()
                         
                         avatar_url = data['avatarUrls']['48x48']
                         
-<<<<<<< HEAD
                         response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                         response.raise_for_status()
                         
@@ -212,16 +176,6 @@ async def jira_view(request):
                         avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
 
 
-=======
-                        response = requests.get(avatar_url, stream=True, headers=headers)
-                        response.raise_for_status()
-                        
-                        avatar = save_avatar(response.content).replace('board\\', '\\')
-                    except:
-                        avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-
-                
->>>>>>> google
                 if str(ii['fields']['status']['name']).upper() in tasks:
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(f"{ii['fields']['summary']}")
@@ -251,7 +205,6 @@ async def jira_view(request):
                             
                             if dict_clients[client][0] not in list_of_clients:
                                 list_of_clients.append(dict_clients[client][0])
-<<<<<<< HEAD
         
         
     list_of_clients = list({tuple(item) for item in list_of_clients if has_number(item)})
@@ -272,7 +225,3 @@ async def jira_view(request):
         
     print('[1]', get_client, type(get_client))
     return render(request, 'jira.html', data)
-=======
-    
-    return render(request, 'jira.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'}) 
->>>>>>> google
