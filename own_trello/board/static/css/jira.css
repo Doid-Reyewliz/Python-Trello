@@ -187,7 +187,7 @@ body .content .task .tickets .ticket .labels {
   height: fit-content;
   margin-bottom: 10px;
 }
-body .content .task .tickets .ticket .labels .priority, body .content .task .tickets .ticket .labels .client {
+body .content .task .tickets .ticket .labels .issue, body .content .task .tickets .ticket .labels .client {
   width: -moz-fit-content;
   width: fit-content;
   height: -moz-fit-content;
@@ -196,7 +196,7 @@ body .content .task .tickets .ticket .labels .priority, body .content .task .tic
   display: block;
   margin-right: 5px;
 }
-body .content .task .tickets .ticket .labels .priority p, body .content .task .tickets .ticket .labels .client p {
+body .content .task .tickets .ticket .labels .issue p, body .content .task .tickets .ticket .labels .client p {
   border-radius: 5px;
   font-size: 80%;
   margin: 0;
@@ -204,19 +204,19 @@ body .content .task .tickets .ticket .labels .priority p, body .content .task .t
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-body .content .task .tickets .ticket .labels .priority > #low, body .content .task .tickets .ticket .labels .client > #low {
+body .content .task .tickets .ticket .labels .issue > #low, body .content .task .tickets .ticket .labels .client > #low {
   color: var(--font-low);
   background-color: var(--color-low);
 }
-body .content .task .tickets .ticket .labels .priority > #mid, body .content .task .tickets .ticket .labels .client > #mid {
+body .content .task .tickets .ticket .labels .issue > #mid, body .content .task .tickets .ticket .labels .client > #mid {
   color: var(--font-medium);
   background-color: var(--color-medium);
 }
-body .content .task .tickets .ticket .labels .priority > #high, body .content .task .tickets .ticket .labels .client > #high {
+body .content .task .tickets .ticket .labels .issue > #high, body .content .task .tickets .ticket .labels .client > #high {
   color: var(--font-high);
   background-color: var(--color-high);
 }
-body .content .task .tickets .ticket .labels .priority > #crit, body .content .task .tickets .ticket .labels .client > #crit {
+body .content .task .tickets .ticket .labels .issue > #crit, body .content .task .tickets .ticket .labels .client > #crit {
   color: var(--font-crit);
   background-color: var(--color-crit);
 }

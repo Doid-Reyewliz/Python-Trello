@@ -1,0 +1,33 @@
+{% for key, values in tasks.items %}
+    {% if values.1 > 0 %}
+        <div class="task">
+            <div class="name">
+                <p>{{ key }} <span>{{ values.1 }}</span></p>
+            </div>
+            
+            <div class="tickets">
+                {% for task_key, task_val in values.0.items %}
+                    <div class="ticket">
+                        <div class="labels">
+                            {% comment %} <div class="issue">
+                                <p style="background-color: {{ task_val.3.1 }}; color: {{ task_val.3.2 }};"> <img src="{{ task_val.3.0 }}"> </p>
+                            </div> {% endcomment %}
+
+                            <div class="client">
+                                <p style="background-color: {{ task_val.2.1 }}; color: {{ task_val.2.2 }};">{{ task_val.2.0 }}</p>
+                            </div>
+                        </div>
+
+                        <div class="link">
+                            <a href="https://support.p-s.kz/browse/{{ task_key }}" target="_blank">{{ task_key }}</a>
+                        </div>
+
+                        <div class="info">
+                            <p>{{ task_val.0 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
