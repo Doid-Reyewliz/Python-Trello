@@ -21,11 +21,11 @@
             <div class="filter">
                 <label>Фильровать по:</label>
                 <select id="clients">
-                    <option value="0">Все</option>
+                    <option value='-1'>Все</option>
                     {% for values in list_of_clients %}
                         {% ifchanged %}
-                            <option value="{{ values }}"> 
-                                {{ values }}
+                            <option value="{{ values.1 }}"> 
+                                {{ values.0 }}
                             </option>
                         {% endifchanged %}  
                     {% endfor %}
@@ -42,25 +42,32 @@
         <script>
             $(document).ready(function() {
                 var selectedClient = $('#clients').val();
-                var selectedPrior = $('#prior').val();
-                console.log('updateTasks');
+                console.log(selectedClient);
+                updateTasks();
 
-                $.ajax({
-                    url: '/board/',
-                    data: { 
-                        'client': selectedClient,
-                        'prior': selectedPrior 
-                    },
-                    type: 'GET',
-                    success: function(data) {
-                        $('#tasks-content').html(data.html);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('HTTP status code:', jqXHR.status);
-                        console.log('HTTP status text:', jqXHR.statusText);
-                        console.log('errorThrown', errorThrown);
-                    }
-                });    
+                $('#clients').on('change', function() {
+                    selectedClient = $(this).val();
+                    console.log(selectedClient);
+                    updateTasks();
+                });
+
+                function updateTasks() {
+                    $.ajax({
+                        url: '/board/',
+                        data: { 
+                            'client': selectedClient,
+                        },
+                        type: 'GET',
+                        success: function(data) {
+                            $('#tasks-content').html(data.html);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log('HTTP status code:', jqXHR.status);
+                            console.log('HTTP status text:', jqXHR.statusText);
+                            console.log('errorThrown', errorThrown);
+                        }
+                    });    
+                }
             });
         </script>
     </body>
