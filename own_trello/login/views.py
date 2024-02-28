@@ -59,7 +59,7 @@ async def login_view(request):
             else:
                 await sync_to_async(request.session.__setitem__)('username', usrn)
                 await sync_to_async(request.session.__setitem__)('token', user_data["token"])
-                # await sync_to_async(cache.clear)()
+                await sync_to_async(cache.clear)()
                 
                 return redirect('/board/')
         

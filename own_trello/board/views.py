@@ -20,7 +20,7 @@ import io
 
 from django.views.decorators.cache import cache_page
 
-def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
+def save_avatar(binary_data, filename=rf"board\static\images\profile_picture_{request.session.get('username')}.png"):
     image = Image.open(io.BytesIO(binary_data))
     image.save(filename)
     
@@ -35,7 +35,7 @@ def get_index(my_dict, find):
 def has_number(item):
     return isinstance(item, list) and isinstance(item[1], int)
 
-# @cache_page(60 * 15) 
+@cache_page(60 * 15) 
 async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
@@ -153,34 +153,29 @@ async def jira_view(request):
                         fullname = str(ii['fields']['assignee']['displayName'])
                     
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
-                        if usrn != 'a.manashov':
-                            try:
-                                url = str(ii['fields']['assignee']['self'])
-                                
-                                headers = {"Authorization": f"Bearer {token}"}
-                                
-                                response = await sync_to_async(requests.get)(url, headers=headers)
-                                response.raise_for_status()
-                                
-                                data = response.json()
-                                
-                                avatar_url = data['avatarUrls']['48x48']
-                                
-                                response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
-                                response.raise_for_status()
-                                
-                                avatar = await sync_to_async(save_avatar)(response.content)
-                                avatar = avatar.replace('board\\', '\\')
-                                
-                                logger.exception("[Avatar 1]: %s", avatar)
-                                
-                            except:
-                                avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                                logger.exception("[Avatar 2]: %s", avatar)
-                        else:
-                            avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                            logger.exception("[Avatar 3]: %s", avatar)
+                        try:
+                            url = str(ii['fields']['assignee']['self'])
                             
+                            headers = {"Authorization": f"Bearer {token}"}
+                            
+                            response = await sync_to_async(requests.get)(url, headers=headers)
+                            response.raise_for_status()
+                            
+                            data = response.json()
+                            
+                            avatar_url = data['avatarUrls']['48x48']
+                            
+                            response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
+                            response.raise_for_status()
+                            
+                            avatar = await sync_to_async(save_avatar)(response.content)
+                            avatar = avatar.replace('board\\', '\\')
+                            
+                            logger.exception("[Avatar 1]: %s", avatar)
+                            
+                        except:
+                            avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                            logger.exception("[Avatar 2]: %s", avatar)                            
 
                     if str(ii['fields']['status']['name']).upper() in tasks:
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
