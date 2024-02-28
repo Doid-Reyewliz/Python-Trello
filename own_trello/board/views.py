@@ -168,7 +168,7 @@ async def jira_view(request):
                             response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                             response.raise_for_status()
                             
-                            avatar = await sync_to_async(save_avatar)(response.content, rf"board\static\images\profile_picture_{usrn}.png")
+                            avatar = await sync_to_async(save_avatar)(response.content, rf"board\static\images\profile_picture_{usrn[1:]}.png")
                             avatar = avatar.replace('board\\', '\\')
                             
                             logger.exception("[Avatar 1]: %s", avatar)
