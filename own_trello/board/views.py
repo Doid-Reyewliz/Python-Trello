@@ -46,7 +46,7 @@ async def jira_view(request):
         fullname = None
         avatar = None
         list_of_clients = []
-        picture_path = f"board/static/images/profile_picture_{usrn[2:]}.png"
+        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
         get_client = request.GET.get('client', None)
                 
         try:
@@ -185,7 +185,7 @@ async def jira_view(request):
                             response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                             response.raise_for_status()
                             
-                            avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
+                            avatar = await sync_to_async(save_avatar)(response.content, f"board/images/profile_picture_{usrn[2:]}.png")
                             avatar = avatar.replace('board/', '/')
                             logger.exception("[Avatar 1]: %s", avatar)
                             
