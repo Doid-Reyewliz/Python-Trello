@@ -11,6 +11,9 @@ import asyncio
 import aiohttp
 from asgiref.sync import sync_to_async, async_to_sync
 
+import logging
+logger = logging.getLogger(__name__)
+
 import requests
 from PIL import Image
 import io
@@ -167,9 +170,13 @@ async def jira_view(request):
                             
                             avatar = await sync_to_async(save_avatar)(response.content)
                             avatar = avatar.replace('board\\', '\\')
+                            
+                            logger.exception("[Avatar 1]: %s", avatar)
+                            
                         except:
                             avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-
+                            logger.exception("[Avatar 2]: %s", avatar)
+                            
 
                     if str(ii['fields']['status']['name']).upper() in tasks:
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
@@ -199,7 +206,7 @@ async def jira_view(request):
                                 tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
                                 
                                 if dict_clients[client][0] not in list_of_clients:
-                                    list_of_clients.append(dict_clients[client][0])
+                                    list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
             
             
         list_of_clients = list({tuple(item) for item in list_of_clients if has_number(item)})
@@ -221,5 +228,6 @@ async def jira_view(request):
         print('[1]', get_client, type(get_client))
         return render(request, 'jira.html', data)
 
-    except:
+    except Exception as e:
+        logger.exception("Error in login: %s", e)
         return redirect('/')
