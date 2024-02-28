@@ -40,7 +40,7 @@ async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
         token = await sync_to_async(request.session.get)('token')
-            
+        
         fullname = None
         avatar = None
         list_of_clients = []
@@ -228,6 +228,7 @@ async def jira_view(request):
             print('[2]', get_client, type(get_client))
             return JsonResponse({'html': html})
 
+        logger.exception(f"{usrn}%s", tasks)
             
         print('[1]', get_client, type(get_client))
         return render(request, 'jira.html', data)
