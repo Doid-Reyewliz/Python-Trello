@@ -46,10 +46,9 @@ async def jira_view(request):
         fullname = None
         avatar = None
         list_of_clients = []
+        picture_path = f"board/static/images/profile_picture_{usrn[2:]}.png"
         get_client = request.GET.get('client', None)
-        
-        print('[PATH]', os.system('ls board'))
-        
+                
         try:
             f = open(f"board/data/data_{usrn[2:]}.txt", "x")
         except:
@@ -167,30 +166,33 @@ async def jira_view(request):
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
                         fullname = str(ii['fields']['assignee']['displayName'])
                     
-                    if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn and (avatar is None or avatar == ''):
+                    if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
+                        # if os.path.isfile(picture_path):
+                        #     avatar = picture_path
+                        # else:
+                        url = str(ii['fields']['assignee']['self'])
+                        
+                        headers = {"Authorization": f"Bearer {token}"}
+                        
+                        response = await sync_to_async(requests.get)(url, headers=headers)
+                        response.raise_for_status()
+                        
+                        data = response.json()
+                            
                         try:
-                            url = str(ii['fields']['assignee']['self'])
-                            
-                            headers = {"Authorization": f"Bearer {token}"}
-                            
-                            response = await sync_to_async(requests.get)(url, headers=headers)
-                            response.raise_for_status()
-                            
-                            data = response.json()
-                            
                             avatar_url = data['avatarUrls']['48x48']
                             
                             response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                             response.raise_for_status()
                             
-                            avatar = await sync_to_async(save_avatar)(response.content, rf"board/static/images/profile_picture_{usrn[2:]}.png")
-                            
+                            avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
+                            avatar = avatar.replace('board/', '/')
                             logger.exception("[Avatar 1]: %s", avatar)
                             
                         except:
                             avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                            logger.exception("[Avatar 2]: %s", avatar)                            
-
+                            logger.exception("[Avatar 2]: %s", avatar)
+                            
                     if str(ii['fields']['status']['name']).upper() in tasks:
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(f"{ii['fields']['summary']}")
@@ -234,12 +236,8 @@ async def jira_view(request):
 
         if get_client is not None:
             html = await sync_to_async(render_to_string)('tasks_content.html', data)
-            print('[2]', get_client, type(get_client))
             return JsonResponse({'html': html})
-
-        logger.exception(f"{usrn}%s\t", tasks)
             
-        print('[1]', get_client, type(get_client))
         del tasks, board_info, closed, list_of_clients, clients, dict_clients, get_client, fullname, avatar
         
         with open(f'board/data/data_{usrn[2:]}.txt', 'w', encoding='utf-8') as f:
