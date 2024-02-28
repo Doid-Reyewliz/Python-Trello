@@ -51,9 +51,7 @@ async def login_view(request):
             
             check = jira.api_version        
 
-            if user_data['password'] != pswd:
-                messages.error(request, 'Неверный логин или пароль')
-            elif check is None:
+            if user_data['password'] != pswd or check is None:
                 messages.error(request, 'Неверный логин или пароль')
             else:
                 await sync_to_async(request.session.__setitem__)('username', usrn)

@@ -18,6 +18,8 @@ import requests
 from PIL import Image
 import io, os, time
 
+import ast
+
 from django.views.decorators.cache import cache_page
 
 def save_avatar(binary_data, filename):
@@ -35,22 +37,29 @@ def get_index(my_dict, find):
 def has_number(item):
     return isinstance(item, list) and isinstance(item[1], int)
 
-@cache_page(60 * 15) 
+# @cache_page(60 * 15) 
 async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
         token = await sync_to_async(request.session.get)('token')
         
-        with open('data/data_{usrn[2:]}.txt', 'r') as f:
-            data = f.read()
-            
-            if data != '':
-                return render(request, 'jira.html', eval(data))
-        
         fullname = None
         avatar = None
         list_of_clients = []
-        get_client = '0'
+        get_client = request.GET.get('client', None)
+        
+        try:
+            f = open(f"board/data/data_{usrn[2:]}.txt", "x")
+        except:
+            with open(f'board/data/data_{usrn[2:]}.txt', 'r', encoding='utf-8') as f:
+                data = f.read()
+                
+                if data != '' and get_client is None:
+                    return render(request, 'jira.html', ast.literal_eval(data))
+                else:
+                    pass
+        
+
                     
         jira = Jira(
             url="https://support.p-s.kz", 
@@ -117,8 +126,6 @@ async def jira_view(request):
             "Антифрод":                                 ["Антифрод", "#0c66e4", "#fff", "SETTINGS-227"],
             "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"]
         }
-
-        get_client = request.GET.get('client', None)
         
         
         print('[0]', get_client, type(get_client))
@@ -158,7 +165,7 @@ async def jira_view(request):
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
                         fullname = str(ii['fields']['assignee']['displayName'])
                     
-                    if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
+                    if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn and (avatar is None or avatar == ''):
                         try:
                             url = str(ii['fields']['assignee']['self'])
                             
@@ -175,7 +182,7 @@ async def jira_view(request):
                             response.raise_for_status()
                             
                             avatar = await sync_to_async(save_avatar)(response.content, rf"board/static/images/profile_picture_{usrn[2:]}.png")
-                            avatar = avatar.replace('board//', '//')
+                            avatar = avatar.replace('board/', '/')
                             
                             logger.exception("[Avatar 1]: %s", avatar)
                             
@@ -229,13 +236,16 @@ async def jira_view(request):
             print('[2]', get_client, type(get_client))
             return JsonResponse({'html': html})
 
-        logger.exception(f"{usrn}%s", tasks)
+        logger.exception(f"{usrn}%s\t", tasks)
             
         print('[1]', get_client, type(get_client))
         del tasks, board_info, closed, list_of_clients, clients, dict_clients, get_client, fullname, avatar
         
-        with open('data/data_{usrn[2:]}.txt', 'w') as f:
-            f.write(data)
+        with open(f'board/data/data_{usrn[2:]}.txt', 'w', encoding='utf-8') as f:
+            if isinstance(data, bytes):
+                f.write(data.decode('utf-8', 'ignore'))
+            else:
+                f.write(str(data))
         
         return render(request, 'jira.html', data)
 
