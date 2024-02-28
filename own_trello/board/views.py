@@ -48,7 +48,7 @@ async def jira_view(request):
         list_of_clients = []
         get_client = request.GET.get('client', None)
         
-        print('[PATH]', os.system('board/data ls'))
+        print('[PATH]', os.system('ls -d -l board/data '))
         
         try:
             f = open(f"board/data/data_{usrn[2:]}.txt", "x")
