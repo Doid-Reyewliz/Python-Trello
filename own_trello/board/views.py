@@ -168,8 +168,8 @@ async def jira_view(request):
                             response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                             response.raise_for_status()
                             
-                            avatar = await sync_to_async(save_avatar)(response.content, rf"board\static\images\profile_picture_{usrn[2:]}.png")
-                            avatar = avatar.replace('board\\', '\\')
+                            avatar = await sync_to_async(save_avatar)(response.content, rf"board/static/images/profile_picture_{usrn[2:]}.png")
+                            avatar = avatar.replace('board//', '//')
                             
                             logger.exception("[Avatar 1]: %s", avatar)
                             
@@ -226,6 +226,7 @@ async def jira_view(request):
         logger.exception(f"{usrn}%s", tasks)
             
         print('[1]', get_client, type(get_client))
+        del tasks, board_info, closed, list_of_clients, clients, dict_clients, get_client, fullname, avatar
         return render(request, 'jira.html', data)
 
     except Exception as e:

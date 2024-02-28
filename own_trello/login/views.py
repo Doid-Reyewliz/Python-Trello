@@ -35,7 +35,6 @@ async def login_view(request):
             usrn = request.POST.get('InputEmail')
             pswd = request.POST.get('InputPassword')
             
-            
             db = Database(db_user, db_pass)
             user_data = await db.get_user(usrn)
             
