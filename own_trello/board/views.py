@@ -184,7 +184,6 @@ async def jira_view(request):
                             response.raise_for_status()
                             
                             avatar = await sync_to_async(save_avatar)(response.content, rf"board/static/images/profile_picture_{usrn[2:]}.png")
-                            avatar = avatar.replace('board/', '/')
                             
                             logger.exception("[Avatar 1]: %s", avatar)
                             
