@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 import requests
 from PIL import Image
-import io
+import io, os, time
 
 from django.views.decorators.cache import cache_page
 
@@ -40,6 +40,12 @@ async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
         token = await sync_to_async(request.session.get)('token')
+        
+        with open('data/data_{usrn[2:]}.txt', 'r') as f:
+            data = f.read()
+            
+            if data != '':
+                return render(request, 'jira.html', eval(data))
         
         fullname = None
         avatar = None
@@ -227,6 +233,10 @@ async def jira_view(request):
             
         print('[1]', get_client, type(get_client))
         del tasks, board_info, closed, list_of_clients, clients, dict_clients, get_client, fullname, avatar
+        
+        with open('data/data_{usrn[2:]}.txt', 'w') as f:
+            f.write(data)
+        
         return render(request, 'jira.html', data)
 
     except Exception as e:
