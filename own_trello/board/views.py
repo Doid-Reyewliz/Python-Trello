@@ -20,7 +20,7 @@ import io
 
 from django.views.decorators.cache import cache_page
 
-def save_avatar(binary_data, filename=rf"board\static\images\profile_picture_{request.session.get('username')}.png"):
+def save_avatar(binary_data, filename):
     image = Image.open(io.BytesIO(binary_data))
     image.save(filename)
     
@@ -168,7 +168,7 @@ async def jira_view(request):
                             response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                             response.raise_for_status()
                             
-                            avatar = await sync_to_async(save_avatar)(response.content)
+                            avatar = await sync_to_async(save_avatar)(response.content, rf"board\static\images\profile_picture_{usrn}.png")
                             avatar = avatar.replace('board\\', '\\')
                             
                             logger.exception("[Avatar 1]: %s", avatar)
