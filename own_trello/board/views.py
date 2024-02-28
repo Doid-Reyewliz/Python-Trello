@@ -153,29 +153,33 @@ async def jira_view(request):
                         fullname = str(ii['fields']['assignee']['displayName'])
                     
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
-                        try:
-                            url = str(ii['fields']['assignee']['self'])
-                            
-                            headers = {"Authorization": f"Bearer {token}"}
-                            
-                            response = await sync_to_async(requests.get)(url, headers=headers)
-                            response.raise_for_status()
-                            
-                            data = response.json()
-                            
-                            avatar_url = data['avatarUrls']['48x48']
-                            
-                            response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
-                            response.raise_for_status()
-                            
-                            avatar = await sync_to_async(save_avatar)(response.content)
-                            avatar = avatar.replace('board\\', '\\')
-                            
-                            logger.exception("[Avatar 1]: %s", avatar)
-                            
-                        except:
+                        if usrn != 'a.manashov':
+                            try:
+                                url = str(ii['fields']['assignee']['self'])
+                                
+                                headers = {"Authorization": f"Bearer {token}"}
+                                
+                                response = await sync_to_async(requests.get)(url, headers=headers)
+                                response.raise_for_status()
+                                
+                                data = response.json()
+                                
+                                avatar_url = data['avatarUrls']['48x48']
+                                
+                                response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
+                                response.raise_for_status()
+                                
+                                avatar = await sync_to_async(save_avatar)(response.content)
+                                avatar = avatar.replace('board\\', '\\')
+                                
+                                logger.exception("[Avatar 1]: %s", avatar)
+                                
+                            except:
+                                avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                                logger.exception("[Avatar 2]: %s", avatar)
+                        else:
                             avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                            logger.exception("[Avatar 2]: %s", avatar)
+                            logger.exception("[Avatar 3]: %s", avatar)
                             
 
                     if str(ii['fields']['status']['name']).upper() in tasks:
