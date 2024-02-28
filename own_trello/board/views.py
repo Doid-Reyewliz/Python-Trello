@@ -35,7 +35,7 @@ def get_index(my_dict, find):
 def has_number(item):
     return isinstance(item, list) and isinstance(item[1], int)
 
-@cache_page(60 * 15) 
+# @cache_page(60 * 15) 
 async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
