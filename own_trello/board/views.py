@@ -59,8 +59,6 @@ async def jira_view(request):
                     return render(request, 'jira.html', ast.literal_eval(data))
                 else:
                     pass
-        
-
                     
         jira = Jira(
             url="https://support.p-s.kz", 

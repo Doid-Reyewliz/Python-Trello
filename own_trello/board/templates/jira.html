@@ -42,12 +42,12 @@
         <script>
             $(document).ready(function() {
                 var selectedClient = $('#clients').val();
-                console.log(selectedClient);
+                console.log('[take]', selectedClient);
                 updateTasks();
 
                 $('#clients').on('change', function() {
                     selectedClient = $(this).val();
-                    console.log(selectedClient);
+                    console.log('[change]', selectedClient);
                     updateTasks();
                 });
 
@@ -60,6 +60,7 @@
                         type: 'GET',
                         success: function(data) {
                             $('#tasks-content').html(data.html);
+                            console.log('[load]', selectedClient);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log('HTTP status code:', jqXHR.status);
