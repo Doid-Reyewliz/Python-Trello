@@ -104,7 +104,7 @@ async def jira_view(request):
         ]
 
         dict_clients = {
-            "Евразийский Банк":                         ["Eurasian Bank", "#e774bb", "#713659", "SETTINGS-96"],
+            "Евразийский Банк":                         ["Eurasian Bank", "#da286e", "#fff", "SETTINGS-96"],
             "Jusan Bank":                               ["Jusan", "#fea362", "#813c0c", "SETTINGS-109"],
             "ForteBank":                                ["Forte Bank", "#ae4787", "#fff", "SETTINGS-90"],
             "КЗИ":                                      ["KZI", "#c9372c", "#fff", "SETTINGS-224"],
@@ -178,20 +178,20 @@ async def jira_view(request):
                         response.raise_for_status()
                         
                         data = response.json()
-                            
-                        try:
-                            avatar_url = data['avatarUrls']['48x48']
-                            
-                            response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
-                            response.raise_for_status()
-                            
-                            avatar = await sync_to_async(save_avatar)(response.content, f"board/images/profile_picture_{usrn[2:]}.png")
-                            avatar = avatar.replace('board/', '/')
-                            logger.exception("[Avatar 1]: %s", avatar)
-                            
-                        except:
-                            avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                            logger.exception("[Avatar 2]: %s", avatar)
+                        
+                        if avatar is None:
+                            try:
+                                avatar_url = data['avatarUrls']['48x48']
+                                
+                                response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
+                                response.raise_for_status()
+                                
+                                avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
+                                logger.exception("[Avatar 1]: %s", avatar)
+                                
+                            except:
+                                avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                                logger.exception("[Avatar 2]: %s", avatar)
                             
                     if str(ii['fields']['status']['name']).upper() in tasks:
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []

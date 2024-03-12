@@ -1,0 +1,135 @@
+:root {
+  --header-height: 3rem;
+  --nav-width: 68px;
+  --first-color: #fff;
+  --first-color-light: #A1C1FE;
+  --color-60: #f5fbf6;
+  --color-30: #f0f4f9;
+  --color-10: #cee9db;
+  --color-support: #4d6359;
+  --color-support2: #c1e8fd;
+  --color-font: #a6a0df;
+  --color-nav: #6180e5;
+  --color-icon: #7a8bdc;
+  --color-h: #5a6cc0;
+  --white-color: #fff;
+  --dark-ticket: #333739;
+  --dark-color: #181a1b;
+  --dark-body: #1c1e1f;
+  --body-font: "Open Sans", sans-serif;
+  --normal-font-size: 1rem;
+  --z-fixed: 100;
+  --thumb-color:#FFCC33;
+  --color-low: #216e4e;
+  --font-low: #baf3db;
+  --color-medium: #675317;
+  --font-medium: #f8e6a0;
+  --color-high: #a22a1f;
+  --font-high: #ffd5d2 ;
+}
+
+html,
+body {
+  padding: 0px;
+  margin: 0px;
+  background: var(--color-30) !important;
+  font-family: var(--body-font);
+  overflow: hidden;
+}
+html .alert,
+body .alert {
+  width: 20%;
+  margin-left: 40%;
+  top: 2%;
+  margin-top: 5px;
+  text-align: center;
+}
+html .content form,
+body .content form {
+  min-height: 400px;
+  max-width: 350px;
+  margin: 100px auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #fff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: hidden;
+  animation: hi 0.5s;
+  border: none;
+  --webkit-transform: translateZ(0px);
+}
+html .content form h2,
+body .content form h2 {
+  color: #0052cc;
+  text-align: center;
+}
+html .content form .input,
+body .content form .input {
+  transition: all 1s;
+  transition-delay: 0s;
+}
+html .content form .input #togglePassword, html .content form .input #togglePass,
+body .content form .input #togglePassword,
+body .content form .input #togglePass {
+  margin-left: -30px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  color: #0065ff;
+}
+html .content form .input #password,
+body .content form .input #password {
+  margin-left: -10px;
+}
+html .content form .input input[type=text], html .content form .input input[type=password],
+body .content form .input input[type=text],
+body .content form .input input[type=password] {
+  background: #fafbfc;
+  border: 2px solid #dfe1e6;
+  border-radius: 5px;
+  width: 250px;
+  height: 40px;
+  line-height: 40px;
+  padding: 10px 10px;
+  color: #000;
+  outline: none;
+}
+html .content form .input input[type=text]::-moz-placeholder, html .content form .input input[type=password]::-moz-placeholder, body .content form .input input[type=text]::-moz-placeholder, body .content form .input input[type=password]::-moz-placeholder {
+  color: grey;
+}
+html .content form .input input[type=text]::placeholder, html .content form .input input[type=password]::placeholder,
+body .content form .input input[type=text]::placeholder,
+body .content form .input input[type=password]::placeholder {
+  color: grey;
+}
+html .content form input[type=submit],
+body .content form input[type=submit] {
+  color: #F6F7F9;
+  height: 50px;
+  line-height: 40px;
+  width: 140px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: 0.5s;
+  cursor: pointer;
+  font-size: 20px;
+  background-color: #0065ff;
+  text-align: center;
+}
+html .content form input[type=submit]:hover,
+body .content form input[type=submit]:hover {
+  width: 160px;
+  border-radius: 10px;
+  transition: 0.4s;
+}
+html .content *,
+body .content * {
+  box-sizing: border-box;
+}/*# sourceMappingURL=style.css.map */

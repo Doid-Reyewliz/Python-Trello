@@ -175,7 +175,7 @@ body {
             background-color: var(--color-30) !important;
             border: 2px solid #dfe1e6;
             // box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
-            padding: 15px 12px 15px 12px;
+            padding: 15px 12px 0px 12px;
             width: 37vh;
             height: fit-content;
             min-height: 10vh;
@@ -302,5 +302,16 @@ body {
             
         }
         
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .content{
+        flex-direction: column;
+
+        .task{
+            width: 100%;
+            flex-direction: row; 
+        }
     }
 }

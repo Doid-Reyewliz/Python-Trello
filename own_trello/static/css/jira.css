@@ -136,7 +136,7 @@ body .content .task {
   flex-wrap: nowrap;
   background-color: var(--color-30) !important;
   border: 2px solid #dfe1e6;
-  padding: 15px 12px 15px 12px;
+  padding: 15px 12px 0px 12px;
   width: 37vh;
   height: -moz-fit-content;
   height: fit-content;
@@ -234,4 +234,14 @@ body .content .task .tickets .ticket .info {
   font-size: small;
   margin-top: -5px;
   overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 900px) {
+  .content {
+    flex-direction: column;
+  }
+  .content .task {
+    width: 100%;
+    flex-direction: row;
+  }
 }/*# sourceMappingURL=jira.css.map */
