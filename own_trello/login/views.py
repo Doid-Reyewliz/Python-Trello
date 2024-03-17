@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.core.cache import cache
 
-from atlassian import Jira
+from atlassian import Jira, utils
 from pymongo import MongoClient
 
 import logging
@@ -41,11 +41,15 @@ async def login_view(request):
             if user_data['token'] is None:
                 messages.error(request, 'Неверный логин или пароль')
                 return render(request, 'login.html')
-                    
+            
+            try:
+                f = open(f"board/data/{usrn[2:]}_cookie.txt", "x")
+            except:
+                pass
+                                
             jira = Jira(
                 url='https://support.p-s.kz',
                 username = usrn,
-                cookies = True,
                 token = user_data["token"]
             )
             

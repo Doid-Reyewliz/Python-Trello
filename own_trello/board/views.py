@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 
-from atlassian import Jira
+from atlassian import Jira, utils
 from pymongo import MongoClient
 
 import asyncio
@@ -23,6 +23,8 @@ import ast
 from django.views.decorators.cache import cache_page
 
 def save_avatar(binary_data, filename):
+    image = Image.open(io.BytesIO(binary_data))
+    image.verify()
     image = Image.open(io.BytesIO(binary_data))
     image.save(filename)
     
@@ -46,23 +48,27 @@ async def jira_view(request):
         fullname = None
         avatar = None
         list_of_clients = []
-        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
         get_client = request.GET.get('client', None)
+        
+        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
+
+        
+        try:
+            f = open(f"board/data/{usrn[2:]}_cookie.txt", "x")
+        except:
+            pass
                 
         try:
             f = open(f"board/data/data_{usrn[2:]}.txt", "x")
         except:
             with open(f'board/data/data_{usrn[2:]}.txt', 'r', encoding='utf-8') as f:
                 data = f.read()
-                
+                                                
                 if data != '' and get_client is None:
-                    return render(request, 'jira.html', ast.literal_eval(data))
-                else:
-                    pass
+                    return render(request, 'jira.html', ast.literal_eval(data))          
                     
         jira = Jira(
             url="https://support.p-s.kz", 
-            cookies = True,
             username = usrn,
             token = token
         )
@@ -165,31 +171,31 @@ async def jira_view(request):
                         fullname = str(ii['fields']['assignee']['displayName'])
                     
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
-                        # if os.path.isfile(picture_path):
-                        #     avatar = picture_path
-                        # else:
-                        url = str(ii['fields']['assignee']['self'])
-                        
-                        headers = {"Authorization": f"Bearer {token}"}
-                        
-                        response = await sync_to_async(requests.get)(url, headers=headers)
-                        response.raise_for_status()
-                        
-                        data = response.json()
-                        
-                        if avatar is None:
-                            try:
-                                avatar_url = data['avatarUrls']['48x48']
-                                
-                                response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
-                                response.raise_for_status()
-                                
-                                avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
-                                logger.exception("[Avatar 1]: %s", avatar)
-                                
-                            except:
-                                avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
-                                logger.exception("[Avatar 2]: %s", avatar)
+                        if os.path.isfile(picture_path):
+                            avatar = picture_path
+                        else:
+                            url = str(ii['fields']['assignee']['self'])
+                            
+                            headers = {"Authorization": f"Bearer {token}"}
+                            
+                            response = await sync_to_async(requests.get)(url, headers=headers)
+                            response.raise_for_status()
+                            
+                            data = response.json()
+                            
+                            if avatar is None:
+                                try:
+                                    avatar_url = data['avatarUrls']['48x48']
+                                    
+                                    response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
+                                    response.raise_for_status()
+                                    
+                                    avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
+                                    logger.exception("[Avatar 1]: %s", avatar)
+                                    
+                                except:
+                                    avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
+                                    logger.exception("[Avatar 2]: %s", avatar)
                             
                     if str(ii['fields']['status']['name']).upper() in tasks:
                         tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []

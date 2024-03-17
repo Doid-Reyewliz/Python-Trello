@@ -18,6 +18,10 @@
                 <h3>{{ fullname }}</h3>
             </div>
 
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+
             <div class="filter">
                 <label>Фильровать по:</label>
                 <select id="clients">
@@ -43,11 +47,14 @@
             $(document).ready(function() {
                 var selectedClient = $('#clients').val();
                 console.log('[take]', selectedClient);
+                $('#loading').show();
                 updateTasks();
 
                 $('#clients').on('change', function() {
                     selectedClient = $(this).val();
                     console.log('[change]', selectedClient);
+                    $('#loading').show();
+                    $('#tasks-content').html('');
                     updateTasks();
                 });
 
@@ -60,9 +67,11 @@
                         type: 'GET',
                         success: function(data) {
                             $('#tasks-content').html(data.html);
+                            $('#loading').hide();
                             console.log('[load]', selectedClient);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
+                            $('#loading').hide();
                             console.log('HTTP status code:', jqXHR.status);
                             console.log('HTTP status text:', jqXHR.statusText);
                             console.log('errorThrown', errorThrown);
