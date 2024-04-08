@@ -74,6 +74,7 @@ async def jira_view(request):
         )
 
         tasks = {
+            'НА РАССМОТРЕНИИ': [{}, 0],
             'ОЧЕРЕДЬ': [{}, 0],
             '3 ЛИНИЯ': [{}, 0], 
             'НА УТОЧНЕНИИ': [{}, 0], 
@@ -205,11 +206,12 @@ async def jira_view(request):
                         tasks[str(ii['fields']['status']['name']).upper()][1] += 1
                         
                         for client in clients:
-                            if client in ii['fields']['customfield_10609'][0]:
-                                tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
-                                
-                                if dict_clients[client][0] not in list_of_clients:
-                                    list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])    
+                            if ii['fields']['customfield_10609'] is not None:
+                                if client in ii['fields']['customfield_10609'][0]:
+                                    tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
+                                    
+                                    if dict_clients[client][0] not in list_of_clients:
+                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])    
 
         for i in closed:
             if i == 'issues':
