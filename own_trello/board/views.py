@@ -84,7 +84,7 @@ async def jira_view(request):
         }
 
         clients = [  
-            "Евразийский Банк",
+            "Евразийский Банк (AML)",
             "Jusan Bank",
             "ForteBank",
             "КЗИ",
@@ -111,7 +111,7 @@ async def jira_view(request):
         ]
 
         dict_clients = {
-            "Евразийский Банк":                         ["Eurasian Bank", "#da286e", "#fff", "SETTINGS-96"],
+            "Евразийский Банк (AML)":                   ["Eurasian Bank", "#da286e", "#fff", "SETTINGS-96"],
             "Jusan Bank":                               ["Jusan", "#fea362", "#813c0c", "SETTINGS-109"],
             "ForteBank":                                ["Forte Bank", "#ae4787", "#fff", "SETTINGS-90"],
             "КЗИ":                                      ["KZI", "#c9372c", "#fff", "SETTINGS-224"],
@@ -133,7 +133,7 @@ async def jira_view(request):
             "Halyk Finance":                            ["Halyk Finance", "#1f845a", "#fff", "SETTINGS-229"],
             "Антифрод":                                 ["Антифрод", "#0c66e4", "#fff", "SETTINGS-227"],
             "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"],
-            "Евразийский Банк Развития":                ["EABR", "#0c66e4", "#fff", "SETTINGS-111"],
+            "Евразийский Банк Развития":                ["ЕАБР", "#e4b100", "#005787", "SETTINGS-111"],
             "MyCar Finance":                            ["MyCar", "#000", "#fff", "SETTINGS-188"]
         }
         
@@ -211,11 +211,21 @@ async def jira_view(request):
                         
                         for client in clients:
                             if ii['fields']['customfield_10609'] is not None:
+                                
                                 if client in ii['fields']['customfield_10609'][0]:
                                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
                                     
                                     if dict_clients[client][0] not in list_of_clients:
                                         list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])    
+                            else:
+                                if client in ii['fields']['customfield_10002'][0]['name']:
+                                    tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
+                                    
+                                    if dict_clients[client][0] not in list_of_clients:
+                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                            
+
+
 
         for i in closed:
             if i == 'issues':
@@ -227,11 +237,18 @@ async def jira_view(request):
                     tasks['ЗАКРЫТЫЕ'][1] += 1
                     
                     for client in clients:
-                            if client in ii['fields']['customfield_10609'][0]:
-                                tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
-                                
-                                if dict_clients[client][0] not in list_of_clients:
-                                    list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                            try:
+                                if client in ii['fields']['customfield_10609'][0]:
+                                    tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
+                                    
+                                    if dict_clients[client][0] not in list_of_clients:
+                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                            except:
+                                if client in ii['fields']['customfield_10002'][0]['name']:
+                                    tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
+                                    
+                                    if dict_clients[client][0] not in list_of_clients:
+                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
             
             
         list_of_clients = list({tuple(item) for item in list_of_clients if has_number(item)})
