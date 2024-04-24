@@ -105,7 +105,9 @@ async def jira_view(request):
             "Altyn Bank",
             "Halyk Finance",
             "Антифрод",
-            "Halyk Global Markets"
+            "Halyk Global Markets",
+            "Евразийский Банк Развития",
+            "MyCar Finance"
         ]
 
         dict_clients = {
@@ -130,7 +132,9 @@ async def jira_view(request):
             "Altyn Bank":                               ["Altyn", "#f5cd47", "#533f04", "SETTINGS-88"],
             "Halyk Finance":                            ["Halyk Finance", "#1f845a", "#fff", "SETTINGS-229"],
             "Антифрод":                                 ["Антифрод", "#0c66e4", "#fff", "SETTINGS-227"],
-            "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"]
+            "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"],
+            "Евразийский Банк Развития":                ["EABR", "#0c66e4", "#fff", "SETTINGS-111"],
+            "MyCar Finance":                            ["MyCar", "#000", "#fff", "SETTINGS-188"]
         }
         
         
