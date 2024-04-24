@@ -84,7 +84,7 @@ async def jira_view(request):
         }
 
         clients = [  
-            "Евразийский Банк (AML)",
+            "АО Евразийский Банк",
             "Jusan Bank",
             "ForteBank",
             "КЗИ",
@@ -111,7 +111,7 @@ async def jira_view(request):
         ]
 
         dict_clients = {
-            "Евразийский Банк (AML)":                   ["Eurasian Bank", "#da286e", "#fff", "SETTINGS-96"],
+            "АО Евразийский Банк":                      ["Eurasian Bank", "#da286e", "#fff", "SETTINGS-96"],
             "Jusan Bank":                               ["Jusan", "#fea362", "#813c0c", "SETTINGS-109"],
             "ForteBank":                                ["Forte Bank", "#ae4787", "#fff", "SETTINGS-90"],
             "КЗИ":                                      ["KZI", "#c9372c", "#fff", "SETTINGS-224"],
@@ -211,7 +211,6 @@ async def jira_view(request):
                         
                         for client in clients:
                             if ii['fields']['customfield_10609'] is not None:
-                                
                                 if client in ii['fields']['customfield_10609'][0]:
                                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
                                     
