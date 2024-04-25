@@ -116,7 +116,7 @@ async def jira_view(request):
             "ForteBank":                                ["Forte Bank", "#ae4787", "#fff", "SETTINGS-90"],
             "КЗИ":                                      ["KZI", "#c9372c", "#fff", "SETTINGS-224"],
             "Brillink Fintech Limited":                 ["BFL", "#6cc3e0", "#164555", "SETTINGS-200"],
-            "Сбербанк":                                 ["Sber bank", "#1f845a", "#fff", "SETTINGS-95"],
+            "Сбербанк":                                 ["Bereke", "#023bf7", "#fff", "SETTINGS-95"],
             "Банк ЦентрКредит":                         ["BCC", "#f5cd47", "#533f04", "SETTINGS-91"],
             "Народный Банк":                            ["Halyk Bank", "#1f845a", "#fff", "SETTINGS-100"],
             "RBK":                                      ["RBK", "#53dbdc", "#164555", "SETTINGS-89"],
@@ -134,7 +134,7 @@ async def jira_view(request):
             "Антифрод":                                 ["Антифрод", "#0c66e4", "#fff", "SETTINGS-227"],
             "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"],
             "Евразийский Банк Развития":                ["ЕАБР", "#e4b100", "#005787", "SETTINGS-111"],
-            "MyCar Finance":                            ["MyCar", "#000", "#fff", "SETTINGS-188"]
+            "MyCar Finance":                            ["My Car", "#000", "#fff", "SETTINGS-188"]
         }
         
         
