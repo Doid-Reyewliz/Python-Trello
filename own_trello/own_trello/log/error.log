@@ -215,3 +215,144 @@ Traceback (most recent call last):
     raise ValueError(
 ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
 "POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view login.views.login_view didn't return an HttpResponse object. It returned None instead.
+"POST / HTTP/1.1" 500 145
+Internal Server Error: /board/
+Traceback (most recent call last):
+  File "G:\My Drive\Main\Prime Source\Python\Python-Trello\own_trello\board\views.py", line 263, in jira_view
+    return await JsonResponse({'html': html})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: object JsonResponse can't be used in 'await' expression
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\asgiref\sync.py", line 277, in __call__
+    return call_result.result()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\asgiref\sync.py", line 353, in main_wrap
+    result = await self.awaitable(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\My Drive\Main\Prime Source\Python\Python-Trello\own_trello\board\views.py", line 277, in jira_view
+    return await redirect('/')
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: object HttpResponseRedirect can't be used in 'await' expression
+"GET /board/?client=-1 HTTP/1.1" 500 145
+Internal Server Error: /board/
+Traceback (most recent call last):
+  File "G:\My Drive\Main\Prime Source\Python\Python-Trello\own_trello\board\views.py", line 263, in jira_view
+    return await JsonResponse({'html': html})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: object JsonResponse can't be used in 'await' expression
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\asgiref\sync.py", line 277, in __call__
+    return call_result.result()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\nauas\AppData\Local\Programs\Python\Python312\Lib\site-packages\asgiref\sync.py", line 353, in main_wrap
+    result = await self.awaitable(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\My Drive\Main\Prime Source\Python\Python-Trello\own_trello\board\views.py", line 277, in jira_view
+    return await redirect('/')
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: object HttpResponseRedirect can't be used in 'await' expression
+"GET /board/?client=-1 HTTP/1.1" 500 145

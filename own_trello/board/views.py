@@ -8,6 +8,7 @@ from atlassian import Jira, utils
 from pymongo import MongoClient
 
 import asyncio
+import aiofiles
 import aiohttp
 from asgiref.sync import sync_to_async, async_to_sync
 
@@ -22,7 +23,7 @@ import ast
 
 from django.views.decorators.cache import cache_page
 
-def save_avatar(binary_data, filename):
+async def save_avatar(binary_data, filename):
     image = Image.open(io.BytesIO(binary_data))
     image.verify()
     image = Image.open(io.BytesIO(binary_data))
@@ -30,13 +31,13 @@ def save_avatar(binary_data, filename):
     
     return filename
 
-def get_index(my_dict, find):
+async def get_index(my_dict, find):
     key_list = list(my_dict.keys())
     index = key_list.index(find)
     
     return index
 
-def has_number(item):
+async def has_number(item):
     return isinstance(item, list) and isinstance(item[1], int)
 
 # @cache_page(60 * 15) 
@@ -54,14 +55,14 @@ async def jira_view(request):
 
         
         try:
-            f = open(f"board/data/{usrn[2:]}_cookie.txt", "x")
+            f = aiofiles.open(f"board/data/{usrn[2:]}_cookie.txt", "x")
         except:
             pass
                 
         try:
-            f = open(f"board/data/data_{usrn[2:]}.txt", "x")
+            f = aiofiles.open(f"board/data/data_{usrn[2:]}.txt", "x")
         except:
-            with open(f'board/data/data_{usrn[2:]}.txt', 'r', encoding='utf-8') as f:
+            with aiofiles.open(f'board/data/data_{usrn[2:]}.txt', 'r', encoding='utf-8') as f:
                 data = f.read()
                                                 
                 if data != '' and get_client is None:
@@ -137,9 +138,7 @@ async def jira_view(request):
             "MyCar Finance":                            ["My Car", "#000", "#fff", "SETTINGS-188"]
         }
         
-        
-        print('[0]', get_client, type(get_client))
-                
+                        
         if get_client is not None and get_client != '-1':
             await sync_to_async(cache.clear)()
             is_associated = False
@@ -215,16 +214,14 @@ async def jira_view(request):
                                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
                                     
                                     if dict_clients[client][0] not in list_of_clients:
-                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])    
+                                        list_of_clients.append([dict_clients[client][0], (await get_index(dict_clients, client))])    
                             else:
                                 if client in ii['fields']['customfield_10002'][0]['name']:
                                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
                                     
                                     if dict_clients[client][0] not in list_of_clients:
-                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                                        list_of_clients.append([dict_clients[client][0], (await get_index(dict_clients, client))])
                             
-
-
 
         for i in closed:
             if i == 'issues':
@@ -241,16 +238,16 @@ async def jira_view(request):
                                     tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
                                     
                                     if dict_clients[client][0] not in list_of_clients:
-                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                                        list_of_clients.append([dict_clients[client][0], (await get_index(dict_clients, client))])
                             except:
                                 if client in ii['fields']['customfield_10002'][0]['name']:
                                     tasks['ЗАКРЫТЫЕ'][0][ii['key']].append(dict_clients[client])
                                     
                                     if dict_clients[client][0] not in list_of_clients:
-                                        list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])
+                                        list_of_clients.append([dict_clients[client][0], (await get_index(dict_clients, client))])
             
             
-        list_of_clients = list({tuple(item) for item in list_of_clients if has_number(item)})
+        list_of_clients = list({tuple(item) for item in list_of_clients if await has_number(item)})
 
         data = {
             'tasks': tasks, 
@@ -266,11 +263,11 @@ async def jira_view(request):
             
         del tasks, board_info, closed, list_of_clients, clients, dict_clients, get_client, fullname, avatar
         
-        with open(f'board/data/data_{usrn[2:]}.txt', 'w', encoding='utf-8') as f:
+        async with aiofiles.open(f'board/data/data_{usrn[2:]}.txt', 'w', encoding='utf-8') as f:            
             if isinstance(data, bytes):
-                f.write(data.decode('utf-8', 'ignore'))
+                await f.write(data.decode('utf-8', 'ignore'))
             else:
-                f.write(str(data))
+                await f.write(str(data))
         
         return render(request, 'jira.html', data)
 
