@@ -4,13 +4,11 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 
-from atlassian import Jira, utils
+from atlassian import Jira
 from pymongo import MongoClient
 
-import asyncio
 import aiofiles
-import aiohttp
-from asgiref.sync import sync_to_async, async_to_sync
+from asgiref.sync import sync_to_async
 
 import logging
 logger = logging.getLogger(__name__)
@@ -20,8 +18,6 @@ from PIL import Image
 import io, os, time
 
 import ast
-
-from django.views.decorators.cache import cache_page
 
 async def save_avatar(binary_data, filename):
     image = Image.open(io.BytesIO(binary_data))
@@ -40,7 +36,6 @@ async def get_index(my_dict, find):
 async def has_number(item):
     return isinstance(item, list) and isinstance(item[1], int)
 
-# @cache_page(60 * 15) 
 async def jira_view(request):
     try:
         usrn = await sync_to_async(request.session.get)('username')    
