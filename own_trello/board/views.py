@@ -19,6 +19,8 @@ import io, os, time
 
 import ast
 
+import json
+
 async def save_avatar(binary_data, filename):
     image = Image.open(io.BytesIO(binary_data))
     image.verify()
@@ -44,11 +46,46 @@ async def jira_view(request):
         fullname = None
         avatar = None
         list_of_clients = []
-        get_client = request.GET.get('client', None)
-        
-        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
 
+        get_client = request.GET.get('client', None)
+
+
+        cache_key = f"jira_data_{usrn[2:]}_{get_client}"
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return render(request, 'jira.html', json.loads(cached_data))
         
+            
+        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
+        
+        # if request.method == 'POST':
+        #     get_client = request.POST.get('client')
+
+        #     if get_client == 'all':
+        #         cache.clear()
+
+        #     # Check if the file exists
+        #     filepath = os.path.join(settings.BASE_DIR, 'jira/templates/jira/selected_client.txt')
+        #     if os.path.isfile(filepath):
+        #         with open(filepath, 'r+') as f:
+        #             f.seek(0)
+        #             f.write(get_client)
+        #             f.truncate()
+
+        #     usrn = request.user.username
+        #     with open(os.path.join(settings.BASE_DIR, 'jira/templates/jira/selected_client.txt')) as f:
+        #         get_client = f.read()
+
+        #     # --- JSON serialization change starts here ---
+        #     filepath = os.path.join(settings.BASE_DIR, 'jira/templates/jira/data.json')  # New JSON file
+        #     if os.path.isfile(filepath):
+        #         with open(filepath, 'r') as f:
+        #             data = json.load(f)  # Load data with json.load
+        #     else:
+        #         # ... (Jira queries and data processing)
+        #         with open(filepath, 'w') as f:  
+        #             json.dump(data, f)  # Save data with json.dump
+    
         try:
             f = aiofiles.open(f"board/data/{usrn[2:]}_cookie.txt", "x")
         except:
@@ -150,15 +187,15 @@ async def jira_view(request):
                     break
             
             if is_associated:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created ASC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created ASC"
+                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY updated DESC"
+                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY updated DESC"
             else:
-                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
-                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created ASC"
+                opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
+                closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
 
         else:
-            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
-            closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created ASC"
+            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
+            closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
 
         board_info = await sync_to_async(jira.jql)(opened_str)
         closed = await sync_to_async(jira.jql)(closed_str)
@@ -263,6 +300,8 @@ async def jira_view(request):
                 await f.write(data.decode('utf-8', 'ignore'))
             else:
                 await f.write(str(data))
+                
+        cache.set(cache_key, json.dumps(data), timeout=3600)  # Cache for 1 hour
         
         return render(request, 'jira.html', data)
 
