@@ -171,7 +171,7 @@ async def jira_view(request):
             # closed = await sync_to_async(jira.jql)(closed_str)
 
         else:
-            opened_str = None
+            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
             closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
         
         board_id = 28
