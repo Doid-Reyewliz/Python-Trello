@@ -1,25 +1,21 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
 
 from atlassian import Jira
 from pymongo import MongoClient
+
+import asyncio
+import aiohttp
+from asgiref.sync import sync_to_async, async_to_sync
 
 import requests
 from PIL import Image
 import io
 
-class Database:
-    def __init__(self, db_user, db_pass):
-        connection_string = f"mongodb+srv://{db_user}:{db_pass}@primecluster.6buri4v.mongodb.net/?retryWrites=true&w=majority"
-
-        self.client = MongoClient(connection_string)
-        self.db = self.client['Users']
-        self.users_collection = self.db["Prime"]
-
-    def get_user(self, mail):
-        return self.users_collection.find_one({"email": f'{mail}@p-s.kz'})
+from django.views.decorators.cache import cache_page
 
 def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
     image = Image.open(io.BytesIO(binary_data))
@@ -27,26 +23,38 @@ def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"
     
     return filename
 
-# @cache_page(60 * 15)
-def jira_view(request):
-    db_user = "alfanauashev"
-    db_pass = '50SBW50gejk8Wn7F'
+def save_avatar(binary_data, filename=r"board\static\images\profile_picture.png"):
+    image = Image.open(io.BytesIO(binary_data))
+    image.save(filename)
     
-    usrn = request.session.get('username')
-    pswd = request.session.get('password')
+    return filename
+
+def get_index(my_dict, find):
+    key_list = list(my_dict.keys())
+    index = key_list.index(find)
     
-    db = Database(db_user, db_pass)
-    user_data = db.get_user(usrn)
-    
-    if user_data['token'] is None:
-        return render(request, 'jira.html', {'data': 'error'})
+    return index
+
+def has_number(item):
+    return isinstance(item, list) and isinstance(item[1], int)
+
+@cache_page(60 * 15) 
+async def jira_view(request):
+    usrn = await sync_to_async(request.session.get)('username')    
+    token = await sync_to_async(request.session.get)('token')
         
+    fullname = None
+    avatar = None
+    list_of_clients = []
+    get_client = '0'
+                
     jira = Jira(
         url="https://support.p-s.kz", 
+        cookies = True,
         username = usrn,
-        token = user_data['token']
+        token = token
     )
-    
+
     tasks = {
         'ОЧЕРЕДЬ': [{}, 0],
         '3 ЛИНИЯ': [{}, 0], 
@@ -55,12 +63,7 @@ def jira_view(request):
         "КЛИЕНТ - ТЕСТИРОВАНИЕ": [{}, 0],
         "ЗАКРЫТЫЕ": [{}, 0]
     }
-    
-    fullname = None
-    avatar = None
-    list_of_clients = []
-    list_of_priority = []
-    
+
     clients = [  
         "Евразийский Банк",
         "Jusan Bank",
@@ -95,7 +98,7 @@ def jira_view(request):
         "Сбербанк":                                 ["Sber bank", "#1f845a", "#fff", "SETTINGS-95"],
         "Банк ЦентрКредит":                         ["BCC", "#f5cd47", "#533f04", "SETTINGS-91"],
         "Народный Банк":                            ["Halyk Bank", "#1f845a", "#fff", "SETTINGS-100"],
-        "RBK":                                      ["RBK", "#6cc3e0", "#164555", "SETTINGS-89"],
+        "RBK":                                      ["RBK", "#53dbdc", "#164555", "SETTINGS-89"],
         "Банк Хоум Кредит" :                        ["Home Credit Bank", "#c9372c", "#fff", "SETTINGS-93"],
         "Халык Банк Кыргызстан":                    ["HBK", "#1f845a", "#fff", "SETTINGS-198"],
         "ВТБ":                                      ["VTB", "#0c66e4", "#fff", "SETTINGS-94"],
@@ -110,20 +113,40 @@ def jira_view(request):
         "Антифрод":                                 ["Антифрод", "#0c66e4", "#fff", "SETTINGS-227"],
         "Halyk Global Markets":                     ["HGM", "#4bce97", "#21674b", "SETTINGS-222"]
     }
-    
-    dict_prior = {
-        "Критический": "Critical",
-        "Высокий": "High",
-        "Средний": "Medium",
-        "Низкий": "Low"
-    }
-    
-    jql_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created DESC"
 
-    closed = jira.jql(jql_str)
+    get_client = request.GET.get('client', None)
     
-    board_id = 28
-    board_info = jira.get_issues_for_board(board_id, jql=None, fields=None, start=0, limit=None, expand=None)
+    
+    print('[0]', get_client, type(get_client))
+            
+    if get_client is not None and get_client != '-1':
+        await sync_to_async(cache.clear)()
+        is_associated = False
+        
+        for i in range(len(clients)):
+            if int(get_client) == i:
+                get_client = clients[i]
+                break
+        
+        for key, item in dict_clients.items():
+            if get_client == key:
+                get_client = item[3]
+                is_associated = True
+                break
+        
+        if is_associated:
+            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created ASC"
+            closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} AND cf[10609] = {get_client} ORDER BY created ASC"
+        else:
+            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
+            closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created ASC"
+
+    else:
+        opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY created ASC"
+        closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY created ASC"
+
+    board_info = await sync_to_async(jira.jql)(opened_str)
+    closed = await sync_to_async(jira.jql)(closed_str)
 
     for i in board_info:
         if i == 'issues':
@@ -135,31 +158,29 @@ def jira_view(request):
                     try:
                         url = str(ii['fields']['assignee']['self'])
                         
-                        headers = {"Authorization": f"Bearer {user_data['token']}"}
+                        headers = {"Authorization": f"Bearer {token}"}
                         
-                        response = requests.get(url, headers=headers)
+                        response = await sync_to_async(requests.get)(url, headers=headers)
                         response.raise_for_status()
                         
                         data = response.json()
                         
                         avatar_url = data['avatarUrls']['48x48']
                         
-                        response = requests.get(avatar_url, stream=True, headers=headers)
+                        response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                         response.raise_for_status()
                         
-                        avatar = save_avatar(response.content).replace('board\\', '\\')
+                        avatar = await sync_to_async(save_avatar)(response.content)
+                        avatar = avatar.replace('board\\', '\\')
                     except:
                         avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
 
-                
+
                 if str(ii['fields']['status']['name']).upper() in tasks:
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']] = []
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(f"{ii['fields']['summary']}")
                     tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(ii['fields']['priority']['name'])
-                    
-                    if ii['fields']['priority']['name'] not in list_of_priority:
-                        list_of_priority.append(ii['fields']['priority']['name'])
-                    
+                                          
                     tasks[str(ii['fields']['status']['name']).upper()][1] += 1
                     
                     for client in clients:
@@ -167,8 +188,8 @@ def jira_view(request):
                             tasks[str(ii['fields']['status']['name']).upper()][0][ii['key']].append(dict_clients[client])
                             
                             if dict_clients[client][0] not in list_of_clients:
-                                list_of_clients.append(dict_clients[client][0])
-                            
+                                list_of_clients.append([dict_clients[client][0], get_index(dict_clients, client)])    
+
     for i in closed:
         if i == 'issues':
             for ii in closed[i]:
@@ -184,5 +205,23 @@ def jira_view(request):
                             
                             if dict_clients[client][0] not in list_of_clients:
                                 list_of_clients.append(dict_clients[client][0])
-    
-    return render(request, 'jira.html', {'tasks': tasks, 'fullname': fullname, 'avatar': avatar, 'list_of_clients': list_of_clients, 'list_of_priority': list_of_priority, 'data': 'success'}) 
+        
+        
+    list_of_clients = list({tuple(item) for item in list_of_clients if has_number(item)})
+
+    data = {
+        'tasks': tasks, 
+        'fullname': fullname, 
+        'avatar': avatar, 
+        'list_of_clients': list_of_clients, 
+        'data': 'success'
+    }
+
+    if get_client is not None:
+        html = await sync_to_async(render_to_string)('tasks_content.html', data)
+        print('[2]', get_client, type(get_client))
+        return JsonResponse({'html': html})
+
+        
+    print('[1]', get_client, type(get_client))
+    return render(request, 'jira.html', data)
