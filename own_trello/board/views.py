@@ -14,6 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import requests
+
 from PIL import Image
 import io, os, time
 
@@ -55,37 +56,10 @@ async def jira_view(request):
         if cached_data:
             return render(request, 'jira.html', json.loads(cached_data))
         
-            
-        picture_path = f"board/images/profile_picture_{usrn[2:]}.png"
+        picture_filename = f"profile_picture_{usrn[2:]}.png"
+        picture_path = os.path.join(os.getcwd(), r"board\images", picture_filename)
+        # os.makedirs(os.path.dirname(picture_path), exist_ok=True)
         
-        # if request.method == 'POST':
-        #     get_client = request.POST.get('client')
-
-        #     if get_client == 'all':
-        #         cache.clear()
-
-        #     # Check if the file exists
-        #     filepath = os.path.join(settings.BASE_DIR, 'jira/templates/jira/selected_client.txt')
-        #     if os.path.isfile(filepath):
-        #         with open(filepath, 'r+') as f:
-        #             f.seek(0)
-        #             f.write(get_client)
-        #             f.truncate()
-
-        #     usrn = request.user.username
-        #     with open(os.path.join(settings.BASE_DIR, 'jira/templates/jira/selected_client.txt')) as f:
-        #         get_client = f.read()
-
-        #     # --- JSON serialization change starts here ---
-        #     filepath = os.path.join(settings.BASE_DIR, 'jira/templates/jira/data.json')  # New JSON file
-        #     if os.path.isfile(filepath):
-        #         with open(filepath, 'r') as f:
-        #             data = json.load(f)  # Load data with json.load
-        #     else:
-        #         # ... (Jira queries and data processing)
-        #         with open(filepath, 'w') as f:  
-        #             json.dump(data, f)  # Save data with json.dump
-    
         try:
             f = aiofiles.open(f"board/data/{usrn[2:]}_cookie.txt", "x")
         except:
@@ -193,11 +167,14 @@ async def jira_view(request):
                 opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
                 closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
 
+            board_info = await sync_to_async(jira.jql)(opened_str)
         else:
-            opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
+            # opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
+            board_id = 28
+            board_info = jira.get_issues_for_board(board_id, jql=None, fields='*all', start=0, limit=None, expand=None)
+            
             closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
-
-        board_info = await sync_to_async(jira.jql)(opened_str)
+        
         closed = await sync_to_async(jira.jql)(closed_str)
 
         for i in board_info:
@@ -208,7 +185,7 @@ async def jira_view(request):
                     
                     if ii['fields']['assignee'] is not None and str(ii['fields']['assignee']['name']) == usrn:
                         if os.path.isfile(picture_path):
-                            avatar = picture_path
+                            print(avatar)
                         else:
                             url = str(ii['fields']['assignee']['self'])
                             
@@ -226,10 +203,12 @@ async def jira_view(request):
                                     response = await sync_to_async(requests.get)(avatar_url, stream=True, headers=headers)
                                     response.raise_for_status()
                                     
-                                    avatar = await sync_to_async(save_avatar)(response.content, f"board/static/images/profile_picture_{usrn[2:]}.png")
+                                    avatar = await save_avatar(response.content, picture_path)
                                     logger.exception("[Avatar 1]: %s", avatar)
                                     
-                                except:
+                                except Exception as e:
+                                    import traceback
+                                    print(e, traceback.format_exc())           
                                     avatar = str(ii['fields']['assignee']['avatarUrls']['48x48'])
                                     logger.exception("[Avatar 2]: %s", avatar)
                             
