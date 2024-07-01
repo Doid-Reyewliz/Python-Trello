@@ -167,15 +167,18 @@ async def jira_view(request):
                 opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
                 closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
 
-            board_info = await sync_to_async(jira.jql)(opened_str)
+            # board_info = await sync_to_async(jira.jql)(opened_str)
+            # closed = await sync_to_async(jira.jql)(closed_str)
+
         else:
-            # opened_str = f"project = SUP_AML AND status in ('На уточнении', '3 линия', Тестирование, Очередь, 'Клиент - тестирование') AND resolution = Unresolved AND Разработчики = {usrn} ORDER BY updated DESC"
-            board_id = 28
-            board_info = jira.get_issues_for_board(board_id, jql=None, fields='*all', start=0, limit=None, expand=None)
-            
+            opened_str = None
             closed_str = f"project = SUP_AML AND status in (Решен, Отозван, Закрыт, Done) AND resolved >= startOfMonth() AND Разработчики = {usrn} ORDER BY updated DESC"
         
-        closed = await sync_to_async(jira.jql)(closed_str)
+        board_id = 28
+        
+        board_info = jira.get_issues_for_board(board_id, jql=opened_str, fields='*all', start=0, limit=None, expand=None)
+        closed = jira.get_issues_for_board(32, fields='*all', jql=closed_str, start=0, limit=None, expand=None)
+
 
         for i in board_info:
             if i == 'issues':
@@ -280,7 +283,7 @@ async def jira_view(request):
             else:
                 await f.write(str(data))
                 
-        cache.set(cache_key, json.dumps(data), timeout=3600)  # Cache for 1 hour
+        # cache.set(cache_key, json.dumps(data), timeout=3600)  # Cache for 1 hour
         
         return render(request, 'jira.html', data)
 

@@ -1,4 +1,8 @@
 {% load static %}
+{% comment %} {% load cache %} {% endcomment %}
+{% comment %} {% cache timeout cache_key dynamic_var %}{% endcache %} {% endcomment %}
+
+
 
 <!DOCTYPE html>
 <html>
@@ -35,6 +39,19 @@
                     {% endfor %}
                 </select>
             </div>
+
+            <div class="auto_reload">
+                <label>Автообновление:</label>
+                <select id="auto_reload">
+                    <option value="0">Выкл</option>
+                    <option value="1">1 мин</option>
+                    <option value="5">5 мин</option>
+                    <option value="10">10 мин</option>
+                    <option value="30">30 мин</option>
+                    <option value="60">1 час</option>
+                    <option value="120">2 часа</option>
+                </select>
+            </div>
             
             <div class="buttons">
                 <button><a href="\">Выйти</a></button>
@@ -45,19 +62,6 @@
         
         <script>
             $(document).ready(function() {
-                var selectedClient = $('#clients').val();
-                console.log('[take]', selectedClient);
-                $('#loading').show();
-                updateTasks();
-
-                $('#clients').on('change', function() {
-                    selectedClient = $(this).val();
-                    console.log('[change]', selectedClient);
-                    $('#loading').show();
-                    $('#tasks-content').html('');
-                    updateTasks();
-                });
-
                 function updateTasks() {
                     $.ajax({
                         url: '/board/',
@@ -78,7 +82,35 @@
                         }
                     });    
                 }
+
+                var selectedClient = $('#clients').val();
+                console.log('[take]', selectedClient);
+                $('#loading').show();
+                updateTasks();
+
+                $('#clients').on('change', function() {
+                    selectedClient = $(this).val();
+                    console.log('[change]', selectedClient);
+                    $('#loading').show();
+                    $('#tasks-content').html('');
+                    updateTasks();
+                });
+    
+                $('#auto_reload').on('change', function() {
+                    var auto_reload = $(this).val();
+                    console.log('[auto_reload]', auto_reload);
+                    if (auto_reload == 0) {
+                        clearInterval(window.timer);
+                    } else {
+                        window.timer = setInterval(function() {
+                            $('#loading').show();
+                            $('#tasks-content').html('');
+                            updateTasks();
+                        }, auto_reload * 60000);
+                    }
+                });
             });
+
         </script>
     </body>
 </html>
