@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-*+*wk-_p5-sa!loq&c6(7x&^3w076&co!ak96$peuv9ek_$zpu
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["https://own-trello.uc.r.appspot.com", "https://www.own-trello.uc.r.appspot.com"]
+CSRF_TRUSTED_ORIGINS = ["https://aml-trello.netlify.app"]
 
 # Application definition
 
